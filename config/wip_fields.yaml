@@ -1,0 +1,214 @@
+wip_fields:
+  晶圆厂:
+    和舰科技:  # 爬虫
+      header: 0
+      names:
+        purchaseOrder: "PO"
+        itemName: "SHP_PRD_NO"
+        lot: "LOT"
+        qty: "WIP_QTY"
+        status: "LOTSTATUS"
+        stage: "ROUTEDESC"
+        layerCount: "ROUTESEQUENCE"
+        currentPisition: "ROUTE_POSITION"
+        forecastDate: "SHIP_FCST_DATE"
+    
+    力积电:
+      header: 3
+      names:
+        purchaseOrder: "PO_NO"
+        itemName: "PRODUCT"
+        lot: "LOT_ID"
+        qty: "QTY"
+        status: "STATUS"
+        stage: "LAYER"
+        layerCount: "LAYER_COUNT"
+        remainLayer: "REMAIN_LAYER"
+        forecastDate: "FORECAST_DATE"
+      operations:
+        - type: "calculate"
+          target_field: "currentPisition"
+          operation: "subtract"
+          left: "LAYER_COUNT"
+          right: "REMAIN_LAYER" 
+    上华:
+      header: 0
+      names:
+        purchaseOrder: "PO"
+        itemName: "CSMC_PARTNAME" 
+        lot: "LOT_ID"
+        qty: "CURRENT_QTY"
+        status: "STATUS"
+        stage: "STAGE"
+        layerCount: "STAGE_STEP_NO"
+        forecastDate: "FORECAST_FAB_OUT_DATE"
+      operations:
+        - type: "split"
+          source: "STAGE_STEP_NO"
+          separator: "/"
+          target_fields:
+            currentPisition: 0
+            layerCount: 1
+        - type: "calculate"
+          target_field: "remainLayer"
+          operation: "subtract"
+          left: "layerCount"  # 使用拆分后的字段
+          right: "currentPisition"  # 使用拆分后的字段
+
+    荣芯:
+      header: 0
+      names:
+        purchaseOrder: "PO"
+        itemName: "Customer\nDevice"
+        lot: "Lot ID"
+        qty: "Wafer\nQty"
+        status: "Lot status"
+        stage: "Current Stage"
+        layerCount: "Total layers"
+        remainLayer: "Rem. Layers"
+        forecastDate: "Forecast Fab Out Date"
+      operations:
+        - type: "calculate"
+          target_field: "currentPisition"
+          operation: "subtract"
+          left: "Total layers"
+          right: "Rem. Layers"
+
+  data_format:
+    - purchaseOrder
+    - itemName
+    - lot
+    - qty
+    - status
+    - stage
+    - layerCount
+    - remainLayer
+    - currentPisition
+    - forecastDate
+    - supplier
+    - finished_at
+
+
+  封装厂:
+    池州华宇:
+      订单号字段:
+        客户订单号(Customer PO#): "po"
+      工艺路线字段:
+        研磨:
+          名称: "研磨(Grinding)"
+          交期: 35
+        切割: 
+          名称: "切割(Dicing Saw)"
+          交期: 34
+        待装片: 
+          名称: "待装片(Waiting For DB)"
+          交期: 32
+        装片: 
+          名称: "装片1(DB1)"
+          交期: 30
+        银胶固化: 
+          名称: "银胶固化1(Epoxy curing 1)"
+          交期: 29
+        等离子清洗1:
+          名称: "PLASMA1"
+          交期: 28
+        键合: 
+          名称: "键合(WB)"
+          交期: 24
+        三目检:
+          名称: "三目检(3th VI)"
+          交期: 23
+        等离子清洗2:
+          名称: "PLASMA2"
+          交期: 20
+        塑封:
+          名称: "塑封(MD)"
+          交期: 16
+        后固化:
+          名称: "后固化"
+          交期: 14
+        回流焊:
+          名称: "IR_REFLOW"
+          交期: 13
+        电镀:
+          名称: "电镀(plating)"
+          交期: 10
+        打印:
+          名称: "打印(marking)"
+          交期: 7
+        后切割:
+          名称: "后切割(PKG SAW)"
+          交期: 6
+        切筋成型:
+          名称: "切筋成型(trim/form)"
+          交期: 4
+        测编打印:
+          名称: "测编打印(FT+MARK+TR)"
+          交期: 3
+        外观检:
+          名称: "外观检(VI)"
+          交期: 2
+        包装:
+          名称: "包装(PACKING)"
+          交期: 2
+        待入库:
+          名称: "待入库(Waiting Storage)" 
+          交期: 1
+      扣留信息字段:
+        - 扣留信息(Hold)
+      库存字段:
+        - 库存_A仓
+
+    山东汉旗:
+      订单号字段:
+        po: "客户订单号"
+      工艺路线字段:
+        装片: 
+          名称: "装片1(DB1)"
+          交期: 30
+        键合: 
+          名称: "键合(WB)"
+          交期: 24
+        三目检(3th VI):
+          名称: "三目检"
+          交期: 23
+        PLASMA2:
+          名称: "等离子清洗2"
+          交期: 20
+        塑封(MD):
+          名称: "塑封"
+          交期: 16
+        后固化:
+          名称: "后固化"
+          交期: 14
+        IR_REFLOW:
+          名称: "回流焊"
+          交期: 13
+        电镀(plating):
+          名称: "电镀"
+          交期: 10
+        打印(marking):
+          名称: "打印"
+          交期: 7
+        后切割(PKG SAW):
+          名称: "后切割"
+          交期: 6
+        切筋成型(trim/form):
+          名称: "切筋成型"
+          交期: 4
+        测编打印(FT+MARK+TR):
+          名称: "测编打印"
+          交期: 3
+        外观检(VI):
+          名称: "外观检"
+          交期: 2
+        包装(PACKING):
+          名称: "包装"
+          交期: 2
+        待入库(Waiting Storage):
+          名称: "待入库" 
+          交期: 1
+      扣留信息字段:
+        扣留信息: 扣留信息(Hold)
+      库存字段:
+        仓库库存: "仓库库存"

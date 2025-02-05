@@ -1,0 +1,268 @@
+rules:
+  - name: "封装送货单-池州华宇"
+    category: "封装送货单"    # 邮件类别，用于后续处理
+    supplier: "池州华宇"    # 供应商信息
+    conditions:    # 匹配条件，所有条件都满足才会触发规则
+      from:    # 发件人匹配列表，支持通配符 *
+        - czmk4@hisemi.com.cn    # 精确匹配
+        - "*@hisemi.com.cn"    # 通配符匹配任何来自该域名的邮件
+      to:    # 收件人匹配列表
+        - wxb1@h-sun.com
+        - "*@h-sun.com"
+      cc:    # 抄送人匹配列表，支持通配符 *
+        - fanlm@h-sun.com    # 精确匹配
+        - cangk2@h-sun.com   # 精确匹配
+        - "*@h-sun.com"    # 通配符匹配任何来自该域名的邮件
+      subject_contains:    # 主题包含关键词列表（任一关键词匹配即可）
+        - 苏州华芯封装产品送货单
+        - 封装产品送货单
+      subject_regex: "苏州华芯封装产品送货单\\d+\\.\\d+"    # 主题正则表达式（匹配送货单编号格式）
+    actions:    # 匹配后的处理动作
+      save_attachment: true    # 是否保存附件
+      mark_as_read: true    # 是否标记为已读
+      attachment_folder: attachments/temp/封装送货单/池州华宇    # 附件保存的子文件夹名
+    enabled: true    # 是否启用该规则
+
+  - name: 封装送货单-山东汉旗   
+    category: "封装送货单"
+    supplier: "山东汉旗"   
+    conditions:   
+      from:   
+        - a13589601455@163.com 
+      to:   
+        - fuyanju_2020@163.com
+      cc:
+        - wxb1@h-sun.com   
+        - fanlm@h-sun.com   
+        - cangk2@h-sun.com
+        - wanghq@h-sun.com  
+        - "*@h-sun.com"   
+      subject_contains:   
+        - 华芯微
+        - 出货单
+      subject_regex: "华芯微\\d+月份出货单\\(\\d+\\)"   
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/封装送货单/山东汉旗"   
+    enabled: true   
+
+  - name: 封装送货单-江苏芯丰   
+    category: "封装送货单"
+    supplier: "江苏芯丰"   
+    conditions:   
+      from:   
+        - cs01@icpkg.com 
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+        - wanghq@h-sun.com
+        - cangk2@h-sun.com
+        - "*@h-sun.com"
+      cc:
+        - guhuiming@icpkg.com   
+        - pengxingyi@icpkg.com 
+        - "*@icpkg.com"
+      subject_contains:   
+        - 314 成品出货通知
+      subject_regex: "314 成品出货通知 \\d+/\\d+"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/封装送货单/江苏芯丰"   
+    enabled: true
+
+  - name: 封装送货单-江苏恩微   
+    category: "封装送货单"
+    supplier: "江苏恩微"   
+    conditions:   
+      from:   
+        - yangxin@enway.ltd 
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+        - wanghq@h-sun.com
+        - cangk2@h-sun.com
+        - "*@h-sun.com"
+      cc:
+        - phf@enway.ltd   
+        - "*@enway.ltd"
+      subject_contains:   
+        - 发货单
+      subject_regex: ".*发货单.*"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/封装送货单/江苏恩微"   
+    enabled: true
+
+  - name: 测试报告-无锡华宇   
+    category: "测试报告"
+    supplier: "无锡华宇"   
+    conditions:   
+      from:   
+        - "*@hisemi.com.cn" 
+      to:   
+        - jial@h-sun.com
+        - kfb-test@h-sun.com
+        - "*@h-sun.com"
+      cc:
+        - wxb1@h-sun.com
+        - fanlm@h-sun.com
+        - "*@h-sun.com"
+      subject_contains:
+        - A0003   
+        - WAFER TEST REPORT
+      subject_regex: ".*WAFER TEST REPORT.*"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/测试报告/无锡华宇"   
+    enabled: true
+
+  - name: 测试报告-苏州拓芯威   
+    category: "测试报告"
+    supplier: "苏州拓芯威"   
+    conditions:   
+      from:   
+        - "*@txwtest.com" 
+      to:   
+        - fanlm@h-sun.com
+      cc:
+        - "*@h-sun.com"
+      subject_contains:
+        - 测试报告  
+        - MAP
+      subject_regex: ".*测试报告.*"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/测试报告/苏州拓芯威"   
+    enabled: true
+
+  - name: 测试报告-苏工院   
+    category: "测试报告"
+    supplier: "苏工院"   
+    conditions:   
+      from:   
+        - testcp@h-sun.com
+      to:   
+        - wxb1@h-sun.com
+      cc:
+        - jial@h-sun.com
+        - fanlm@h-sun.com
+      subject_contains:
+        - 测试报表  
+      subject_regex: ".*测试报表.*"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/测试报告/苏工院"   
+    enabled: true
+
+  - name: 进度表-池州华宇   
+    category: "进度表"
+    supplier: "池州华宇"   
+    conditions:   
+      from:   
+        - hisemi-mes@hisemi.com.cn
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+        - czmk4@hisemi.com.cn
+        - wanghq@h-sun.com
+      subject_contains:
+        - 苏州华芯微电子股份有限公司的封装产品进展表
+      subject_regex: "苏州华芯微电子股份有限公司的封装产品进展表"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/进度表/池州华宇"   
+    enabled: true
+
+  - name: 进度表-无锡华润安盛   
+    category: "进度表"
+    supplier: "无锡华润安盛"   
+    conditions:   
+
+      from:   
+        - atxks_b2b_report@atxsemicon.com
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+        - wanghq@h-sun.com
+      cc:
+        - "sweet_liang@atxsemicon.com"
+      subject_contains:
+        - HUX WIP REPORT
+      subject_regex: "HUX WIP REPORT\\s+\\d{4}/\\d{2}/\\d{2}"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/进度表/无锡华润安盛"   
+    enabled: true
+
+  - name: 进度表-力积电   
+    category: "进度表"
+    supplier: "力积电"   
+    conditions:   
+      from:   
+        - epsmc@powerchip.com
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+      cc:
+        - jcliao@powerchip.com
+        - yclina@powerchip.com
+      subject_contains:
+        - '[PSMC Lot Status - 8"] HUAXIN'
+      subject_regex: '\[PSMC Lot Status - 8"\] HUAXIN'
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/进度表/力积电"   
+    enabled: true
+
+  - name: 进度表-上华FAB1   
+    category: "进度表"
+    supplier: "上华"   
+    conditions:   
+      from:   
+        - crm_wip_zy@csmc.crmicro.com
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+      subject_contains:
+        - Your wafer report FAB1
+      subject_regex: "Your wafer report FAB1"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/进度表/上华FAB1"   
+    enabled: true
+
+  - name: 进度表-上华FAB2   
+    category: "进度表"
+    supplier: "上华"   
+    conditions:   
+      from:   
+        - crm_wip_zy@csmc.crmicro.com
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+      subject_contains:
+        - Your wafer report FAB2
+      subject_regex: "Your wafer report FAB2"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/进度表/上华FAB2"   
+    enabled: true
+
+  - name: 默认规则
+    category: "未分类"
+    supplier: "未知"
+    actions:
+      save_attachment: false
+      mark_as_read: false
+      attachment_folder: "attachments/temp/默认"

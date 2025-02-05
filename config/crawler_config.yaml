@@ -1,0 +1,31 @@
+# 爬虫配置
+crawler:
+  # 是否启用爬虫功能
+  enabled: true
+  # 调度配置
+  schedule:
+    # 运行时间（24小时制）
+    run_time: "10:00"
+    # 重试间隔（分钟）
+    retry_interval: 5
+    # 最大重试次数
+    max_retries: 3
+  
+  # 爬虫列表
+  crawlers:
+    # 和舰科技爬虫配置
+    hjtc:
+      enabled: true
+      username: ${HJTC_USERNAME}
+      password: ${HJTC_PASSWORD}
+      # 输出目录
+      output_dir: "attachments/temp/进度表/和舰科技"
+
+    # 江苏芯丰爬虫配置
+    xinf:
+      enabled: true
+      username: ${XINF_USERNAME}
+      password: ${XINF_PASSWORD}
+      remember_me: true
+      # 输出目录
+      output_dir: "attachments/temp/进度表/江苏芯丰"

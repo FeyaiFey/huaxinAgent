@@ -1,0 +1,21 @@
+# IMAP服务器配置
+imap_server: ${EMAIL_IMAP_SERVER}  # 从环境变量获取
+imap_port: ${EMAIL_IMAP_PORT}  # 从环境变量获取
+use_ssl: ${EMAIL_USE_SSL}  # 从环境变量获取
+
+
+# 邮箱认证信息
+email: ${EMAIL_ADDRESS}  # 从环境变量获取
+password: ${EMAIL_PASSWORD}  # 从环境变量获取
+
+
+# 规则文件路径
+rules_file: "config/email_rules.yaml"
+
+# 日志配置
+log_level: "INFO"
+log_file: "logs/email_client.log"
+
+# 附件保存配置
+default_attachment_dir: "attachments"
+max_attachment_size: 10485760  # 10MB 

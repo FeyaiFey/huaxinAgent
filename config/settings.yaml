@@ -1,0 +1,36 @@
+# 数据库配置
+database:
+  driver: 'ODBC Driver 17 for SQL Server'
+  server: 'localhost'
+  database: 'E10'
+  auth_type: 'sql'  # windows 或 sql
+  echo: false  # 是否打印SQL语句
+
+# 邮件配置
+email:
+  imap_server: ${EMAIL_IMAP_SERVER}
+  imap_port: ${EMAIL_IMAP_PORT}
+  use_ssl: ${EMAIL_USE_SSL}
+  username: ${EMAIL_ADDRESS}
+  password: ${EMAIL_PASSWORD}
+  check_interval: 600  # 检查邮件间隔（秒）
+  rules_file: config/email_rules.yaml
+
+# 爬虫配置
+crawler:
+  schedule_time: '08:00'
+  timeout: 30
+  retry_times: 3
+  user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+
+# ERP配置
+erp:
+  confidence_threshold: 0.9
+  operation_delay: 1.0
+  retry_interval: 5
+
+# 文件管理
+file_management:
+  temp_folder: './temp'
+  log_folder: './logs'
+  max_temp_age: 7  # 临时文件保存天数
