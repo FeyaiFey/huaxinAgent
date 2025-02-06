@@ -113,7 +113,7 @@ class EmailHelper:
         to_addrs = self.get_email_addresses(msg, 'to')
         cc_addrs = self.get_email_addresses(msg, 'cc')
         
-        self.logger.info(f"邮件信息 - 主题: {subject}")
+        self.logger.debug(f"邮件信息 - 主题: {subject}")
         
         return {
             'id': email_id.decode(),
@@ -149,7 +149,7 @@ class EmailHelper:
                             email_id: bytes, folder_path: Path) -> Optional[Path]:
         """保存附件文件"""
         try:
-            self.logger.info(f"处理附件: {filename}")
+            self.logger.debug(f"处理附件: {filename}")
             
             # 确保folder_path是Path对象
             folder_path = Path(folder_path)
@@ -162,7 +162,7 @@ class EmailHelper:
             
             # 检查文件是否已存在
             if filepath.exists():
-                self.logger.info(f"附件已存在，跳过下载: {filename}")
+                self.logger.debug(f"附件已存在，跳过下载: {filename}")
                 return filepath
             
             # 保存文件

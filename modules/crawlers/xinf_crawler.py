@@ -39,7 +39,7 @@ class XinfCrawler(BaseCrawler):
             bool: 登录是否成功
         """
         try:
-            self.logger.info("开始登录江苏芯丰PWS系统...")
+            self.logger.debug("开始登录江苏芯丰PWS系统...")
             login_url = f"{self.BASE_URL}/pws/sys/customLogin"
             
             login_data = {
@@ -59,7 +59,7 @@ class XinfCrawler(BaseCrawler):
                 self.headers.update({
                     "X-Access-Token": self._token
                 })
-                self.logger.info("登录成功并获取token")
+                self.logger.debug("登录成功并获取token")
             else:
                 self.logger.error(f"登录响应格式错误: {response_data}")
                 return False
@@ -82,7 +82,7 @@ class XinfCrawler(BaseCrawler):
                 self.logger.error("未获取到token，请先登录")
                 return False
                 
-            self.logger.info("开始获取WIP数据...")
+            self.logger.debug("开始获取WIP数据...")
             
             # 构建请求参数
             params = {
@@ -98,7 +98,7 @@ class XinfCrawler(BaseCrawler):
             
             # 检查是否需要重新登录
             if response.status_code == 500 and "Token失效" in response.text:
-                self.logger.info("Token已失效，尝试重新登录...")
+                self.logger.debug("Token已失效，尝试重新登录...")
                 if self.login():
                     # 重新发送请求
                     response = self.get(wip_detail_url, params=params)
@@ -128,7 +128,7 @@ class XinfCrawler(BaseCrawler):
             
             # 将数据转换为DataFrame并保存为Excel
             if not records:
-                self.logger.info("获取的数据记录为空，创建空文件")
+                self.logger.debug("获取的数据记录为空，创建空文件")
                 # 创建一个空的DataFrame，保持列名一致
                 columns = ["row", "cardCode", "packageCode", "pmodel", "currentqty", 
                           "stepName", "arriveTimestamp", "waferModel", "waferBatch", 
@@ -140,7 +140,7 @@ class XinfCrawler(BaseCrawler):
                 
             df.to_excel(filename, index=False, engine='openpyxl')
             
-            self.logger.info(f"数据已保存到: {filename}")
+            self.logger.debug(f"数据已保存到: {filename}")
             return True
             
         except Exception as e:

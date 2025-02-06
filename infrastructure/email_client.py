@@ -65,7 +65,7 @@ class EmailClient:
                     int(self.config.get('imap_port', 143))
                 )
             self.imap.login(self.config['email'], self.config['password'])
-            self.logger.info(f"成功连接到IMAP服务器: {self.config['imap_server']}")
+            self.logger.debug(f"成功连接到IMAP服务器: {self.config['imap_server']}")
         except Exception as e:
             self.logger.error(f"连接IMAP服务器失败: {str(e)}")
             raise
@@ -98,7 +98,7 @@ class EmailClient:
         """
         self.check_connection()
 
-        self.logger.info("开始获取未读邮件...")
+        self.logger.debug("开始获取未读邮件...")
 
         try:
             status, _ = self.imap.select('INBOX')
@@ -108,7 +108,7 @@ class EmailClient:
             if status != 'OK':
                 raise Exception(f"无法搜索未读邮件，状态: {status}")
             email_ids = messages[0].split()
-            self.logger.info(f"找到 {len(email_ids)} 封未读邮件")
+            self.logger.debug(f"找到 {len(email_ids)} 封未读邮件")
             return email_ids
         except Exception as e:
             self.logger.error(f"获取未读邮件失败: {str(e)}")
@@ -163,7 +163,7 @@ class EmailClient:
 
             # 如果未匹配到任何规则，则保持未读状态
             if category == '未分类':
-                self.logger.info(f"邮件不匹配任何规则，保持未读状态: {email_data['subject']}")
+                self.logger.debug(f"邮件不匹配任何规则，保持未读状态: {email_data['subject']}")
                 return {}
             
             # 保存附件
@@ -177,7 +177,7 @@ class EmailClient:
             if match_result['actions'].get('mark_as_read', True):
                 email_helper.mark_email_as_read(email_id)
 
-            self.logger.info(f"邮件处理完成: [{category}] {email_data['subject']}")
+            self.logger.debug(f"邮件处理完成: [{category}] {email_data['subject']}")
             return match_result
             
         except Exception as e:

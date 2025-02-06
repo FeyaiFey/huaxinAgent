@@ -1,0 +1,30 @@
+# 日志配置
+logging:
+  # 全局日志级别
+  level: DEBUG
+  
+  # 日志格式
+  format: '[ %(asctime)s ] [ %(name)s ] [ %(levelname)s ] %(message)s'
+  datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  # 文件配置
+  file:
+    level: DEBUG  # 文件日志级别
+    max_size: 10485760  # 10MB
+    backup_count: 30    # 保留30个备份
+    filename_template: 'huaxinAgent_%Y%m%d.log'
+  
+  # 控制台配置
+  console:
+    level: INFO   # 控制台日志级别
+    
+  # 模块特定配置
+  loggers:
+    database:
+      level: DEBUG
+    email_client:
+      level: INFO
+    crawler:
+      level: DEBUG
+    file_processor:
+      level: DEBUG 

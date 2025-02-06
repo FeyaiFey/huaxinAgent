@@ -62,7 +62,7 @@ class HuaxinAgent:
             # 输出任务状态
             jobs_status = self.scheduler.get_jobs_status()
             for job_id, status in jobs_status.items():
-                self.logger.info(
+                self.logger.debug(
                     f"任务 {status['name']} 下次运行时间: "
                     f"{status['next_run_time']}"
                 )

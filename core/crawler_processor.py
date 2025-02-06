@@ -63,7 +63,7 @@ class CrawlerProcessor:
                             # 实例化爬虫
                             crawler_instance = crawler_class(config=config)
                             self.crawlers.append(crawler_instance)
-                            self.logger.info(f"加载爬虫: {crawler_class.__name__}")
+                            self.logger.debug(f"加载爬虫: {crawler_class.__name__}")
                         else:
                             self.logger.warning(f"未找到爬虫 {crawler_class.__name__} 的配置信息或爬虫已禁用")
                         
@@ -117,7 +117,7 @@ class CrawlerProcessor:
                                 'status': 'success',
                                 'data': result
                             }
-                            self.logger.info(f"爬虫 {crawler.__class__.__name__} 执行成功")
+                            self.logger.debug(f"爬虫 {crawler.__class__.__name__} 执行成功")
                         
                     except Exception as e:
                         stats['failed'] += 1

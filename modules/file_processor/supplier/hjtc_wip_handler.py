@@ -38,8 +38,7 @@ def process_hjtc_excel(file_path: str) -> Optional[str]:
         # 如果stage是STOCK,将相关字段设置为0
         stock_mask = df["status"] == "STOCK"
         df.loc[stock_mask, ["layerCount", "remainLayer", "currentPisition"]] = pd.NaT
-        logger.info(f"成功处理和舰科技Excel文件")
-        print(df)
+        logger.debug(f"成功处理和舰科技Excel文件")
         return df
     
     except Exception as e:

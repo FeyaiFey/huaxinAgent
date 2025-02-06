@@ -202,6 +202,26 @@ rules:
       attachment_folder: "attachments/temp/进度表/无锡华润安盛"   
     enabled: true
 
+  - name: 进度表-山东汉旗   
+    category: "进度表"
+    supplier: "山东汉旗"   
+    conditions:   
+      from:   
+        - a13589601455@163.com
+      to:   
+        - fanlm@h-sun.com
+      cc:
+        - wxb1@h-sun.com
+        - wanghq@h-sun.com
+      subject_contains:
+        - 华芯微WIP
+      subject_regex: "华芯微WIP"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/进度表/山东汉旗"   
+    enabled: true
+
   - name: 进度表-力积电   
     category: "进度表"
     supplier: "力积电"   

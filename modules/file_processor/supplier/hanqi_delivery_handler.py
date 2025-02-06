@@ -47,7 +47,7 @@ class HanQiHandler(BaseDeliveryExcelHandler):
             if not os.path.exists(attachment_folder):
                 try:
                     os.makedirs(attachment_folder)
-                    self.logger.info(f"已创建目录: {attachment_folder}")
+                    self.logger.debug(f"已创建目录: {attachment_folder}")
                 except Exception as e:
                     self.logger.error(f"创建目录失败: {attachment_folder} - {str(e)}")
                     return None
@@ -87,7 +87,7 @@ class HanQiHandler(BaseDeliveryExcelHandler):
                             
                     # 处理完成后，将文件移动到归档目录
                     if self.utils.move_excel(file_path, "山东汉旗"):
-                        self.logger.info(f"文件已归档: {file}")
+                        self.logger.debug(f"文件已归档: {file}")
                     
                 except Exception as e:
                     self.logger.error(f"处理文件失败: {file} - {str(e)}")
@@ -156,7 +156,7 @@ class HanQiHandler(BaseDeliveryExcelHandler):
                         
                     # 检查日期是否大于最后处理日期
                     if self.utils.compare_dates(delivery_date, last_process_date) <= 0:
-                        self.logger.info(f"跳过已处理的日期: {delivery_date}")
+                        self.logger.debug(f"跳过已处理的日期: {delivery_date}")
                         continue
                         
                     # 更新最大处理日期
@@ -219,7 +219,7 @@ class HanQiHandler(BaseDeliveryExcelHandler):
                         
                     # 检查日期是否大于最后处理日期
                     if self.utils.compare_dates(delivery_date, last_process_date) <= 0:
-                        self.logger.info(f"跳过已处理的日期: {delivery_date}")
+                        self.logger.debug(f"跳过已处理的日期: {delivery_date}")
                         continue
                         
                     # 更新最大处理日期
@@ -266,7 +266,7 @@ class HanQiHandler(BaseDeliveryExcelHandler):
             # 所有sheet处理完成后，更新最后处理日期
             if data_dict and self.utils.compare_dates(max_processed_date, last_process_date) > 0:
                 self.utils.update_last_process_date("山东汉旗", max_processed_date)
-                self.logger.info(f"更新山东汉旗最后处理日期为: {max_processed_date}")
+                self.logger.debug(f"更新山东汉旗最后处理日期为: {max_processed_date}")
                 
             return data_dict
             

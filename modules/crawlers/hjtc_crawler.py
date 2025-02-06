@@ -66,7 +66,7 @@ class HJTCCrawler(BaseCrawler):
             bool: 登录是否成功
         """
         try:
-            self.logger.info("开始登录和舰科技系统...")
+            self.logger.debug("开始登录和舰科技系统...")
             login_url = f"{self.BASE_URL}/secure/login_hjtc.fcc?TYPE=33554433&REALMOID=06-af713708-e650-4979-afd0-d504ff745fd2&GUID=0&SMAUTHREASON=0&METHOD=GET&SMAGENTNAME=-SM-oEHd7jdu1MRiPlIRQQWzhpTe%2bzCsgXutiNAm67JlRwA9yMKTNX1H5EwwnharNAiE&TARGET=-SM-https%3a%2f%2fmy2%2ehjtc%2ecom%2ecn%2f"
             
             login_data = {
@@ -77,7 +77,7 @@ class HJTCCrawler(BaseCrawler):
             response = self.post(login_url, data=login_data)
             response.raise_for_status()
             
-            self.logger.info("登录成功")
+            self.logger.debug("登录成功")
             return True
             
         except Exception as e:
@@ -92,7 +92,7 @@ class HJTCCrawler(BaseCrawler):
             Optional[str]: 下载的文件路径，失败返回None
         """
         try:
-            self.logger.info("开始下载WIP Excel报表...")
+            self.logger.debug("开始下载WIP Excel报表...")
             
             # 下载Excel
             download_url = f"{self.BASE_URL}/myhj_web/Production/WIP/summary_drill_export"
@@ -118,7 +118,7 @@ class HJTCCrawler(BaseCrawler):
             date = datetime.now().strftime("%Y%m%d")
             filename = f"和舰科技_{date}.csv"
             filepath = self.save_file(response.content, filename, self.config["output_dir"])
-            self.logger.info(f"Excel文件已保存到: {filepath}")
+            self.logger.debug(f"Excel文件已保存到: {filepath}")
             return filepath
             
         except Exception as e:

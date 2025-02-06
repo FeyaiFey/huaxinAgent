@@ -74,8 +74,8 @@ class DeliveryHandler:
             result = handler.process(match_result)
             
             if result:
-                self.logger.info(f"供应商[{supplier}]的送货单提取完成")
-                self.logger.info(f"开始添加到工作进程...")
+                self.logger.debug(f"供应商[{supplier}]的送货单提取完成")
+                self.logger.debug(f"开始添加到工作进程...")
                 try:
                     utils = SupplierUtils(self.config)
                     utils.copy_to_gzjc(supplier)

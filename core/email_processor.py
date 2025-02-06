@@ -3,10 +3,9 @@
 负责协调邮件检查、规则应用和文件处理的整体流程
 """
 
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 from utils.logger import Logger
-from utils.emailHelper import EmailHelper
 from infrastructure.email_client import EmailClient
 from modules.file_processor.delivery_handler import DeliveryHandler
 # from modules.erp_integration.adapter import ERPAdapter
@@ -53,7 +52,7 @@ class EmailProcessor:
                     
                     # 检查是否有匹配结果
                     if not match_result:
-                        self.logger.info("邮件不匹配任何规则，跳过处理")
+                        self.logger.debug("邮件不匹配任何规则，跳过处理")
                         continue
                         
                     # 统计附件数
@@ -66,7 +65,7 @@ class EmailProcessor:
                     if category == '封装送货单' and attachments:
                         result = self.delivery_handler.process_delivery_excel(match_result)
                         stats['processed'] += 1
-                        self.logger.info(f"处理结果: {result}")
+                        self.logger.debug(f"处理结果: {result}")
                         
                 except Exception as e:
                     stats['failed'] += 1

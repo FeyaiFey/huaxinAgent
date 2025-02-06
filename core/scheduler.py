@@ -25,8 +25,8 @@ class Scheduler:
         self.config = load_yaml('config/settings.yaml')
         self.crawler_config = load_yaml('config/crawler_config.yaml')
         self.scheduler = BackgroundScheduler()
-        self.email_processor = EmailProcessor()
         self.crawler_processor = CrawlerProcessor()
+        self.email_processor = EmailProcessor()
         self._setup_jobs()
         
     def _setup_jobs(self):
@@ -34,33 +34,12 @@ class Scheduler:
         # 获取功能开关配置
         email_config = self.config['features']['email_processor']
         crawler_config = self.crawler_config['crawler']
-        
-        # 设置邮件处理任务
-        if email_config['enabled']:
-            # 如果配置了启动时执行，则先执行一次邮件处理任务
-            if email_config.get('run_on_start', True):
-                self.logger.info("系统启动，执行首次邮件处理任务...")
-                self._run_email_processor()
-            
-            # 设置定时任务
-            self.scheduler.add_job(
-                func=self._run_email_processor,
-                trigger=IntervalTrigger(
-                    seconds=email_config['check_interval']
-                ),
-                id='email_processor',
-                name='邮件处理任务',
-                replace_existing=True
-            )
-            self.logger.info(
-                f"邮件处理任务已设置，间隔：{email_config['check_interval']}秒"
-            )
             
         # 设置爬虫任务
         if crawler_config['enabled']:
             # 如果配置了启动时执行，则先执行一次爬虫任务
             if crawler_config.get('run_on_start', True):
-                self.logger.info("系统启动，执行首次爬虫任务...")
+                self.logger.debug("系统启动，执行首次爬虫任务...")
                 self._run_crawler_processor()
             
             # 解析时间
@@ -76,8 +55,29 @@ class Scheduler:
                 name='爬虫任务',
                 replace_existing=True
             )
-            self.logger.info(
+            self.logger.debug(
                 f"爬虫任务已设置，执行时间：{crawler_config['schedule']['run_time']}"
+            )
+        
+        # 设置邮件处理任务
+        if email_config['enabled']:
+            # 如果配置了启动时执行，则先执行一次邮件处理任务
+            if email_config.get('run_on_start', True):
+                self.logger.debug("系统启动，执行首次邮件处理任务...")
+                self._run_email_processor()
+            
+            # 设置定时任务
+            self.scheduler.add_job(
+                func=self._run_email_processor,
+                trigger=IntervalTrigger(
+                    seconds=email_config['check_interval']
+                ),
+                id='email_processor',
+                name='邮件处理任务',
+                replace_existing=True
+            )
+            self.logger.debug(
+                f"邮件处理任务已设置，间隔：{email_config['check_interval']}秒"
             )
             
     def _run_email_processor(self):
@@ -85,7 +85,7 @@ class Scheduler:
         try:
             self.logger.info("开始执行邮件处理任务...")
             stats = self.email_processor.process_unread_emails()
-            self.logger.info(f"邮件处理任务完成: {stats}")
+            self.logger.debug(f"邮件处理任务完成: {stats}")
             
         except Exception as e:
             self.logger.error(f"邮件处理任务失败: {str(e)}", exc_info=True)
@@ -103,7 +103,7 @@ class Scheduler:
                     f"失败详情: {', '.join(name for name, result in stats['results'].items() if result['status'] == 'failed')}"
                 )
             else:
-                self.logger.info(f"爬虫任务成功完成: {stats}")
+                self.logger.debug(f"爬虫任务成功完成: {stats}")
             
         except Exception as e:
             self.logger.error(f"爬虫任务失败: {str(e)}", exc_info=True)
@@ -112,7 +112,7 @@ class Scheduler:
         """启动调度器"""
         try:
             self.scheduler.start()
-            self.logger.info("调度器已启动")
+            self.logger.debug("调度器已启动")
             
         except Exception as e:
             self.logger.error(f"启动调度器失败: {str(e)}", exc_info=True)
@@ -122,7 +122,7 @@ class Scheduler:
         """停止调度器"""
         try:
             self.scheduler.shutdown()
-            self.logger.info("调度器已停止")
+            self.logger.debug("调度器已停止")
             
         except Exception as e:
             self.logger.error(f"停止调度器失败: {str(e)}", exc_info=True)

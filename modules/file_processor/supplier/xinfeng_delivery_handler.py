@@ -46,7 +46,7 @@ class XinFengHandler(BaseDeliveryExcelHandler):
             if not os.path.exists(attachment_folder):
                 try:
                     os.makedirs(attachment_folder)
-                    self.logger.info(f"已创建目录: {attachment_folder}")
+                    self.logger.debug(f"已创建目录: {attachment_folder}")
                 except Exception as e:
                     self.logger.error(f"创建目录失败: {attachment_folder} - {str(e)}")
                     return None
@@ -86,7 +86,7 @@ class XinFengHandler(BaseDeliveryExcelHandler):
                             
                     # 处理完成后，将文件移动到归档目录
                     if self.utils.move_excel(file_path, "江苏芯丰"):
-                        self.logger.info(f"文件已归档: {file}")
+                        self.logger.debug(f"文件已归档: {file}")
                     
                 except Exception as e:
                     self.logger.error(f"处理文件失败: {file} - {str(e)}")

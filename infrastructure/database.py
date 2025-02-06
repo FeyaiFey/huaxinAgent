@@ -65,8 +65,8 @@ class DatabaseManager:
             else:
                 # Windows 身份验证
                 conn_str = (
-                    f"DRIVER={{{driver}}};"
-                    f"SERVER={server};"
+                    f"DRIVER=ODBC Driver 17 for SQL Server;"
+                    f"SERVER=localhost;"
                     f"DATABASE={database};"
                     f"Trusted_Connection=yes;"
                     f"TrustServerCertificate=yes"
@@ -92,7 +92,7 @@ class DatabaseManager:
                 autoflush=False
             )
             
-            self.logger.info(f"数据库连接池初始化成功: {server}/{database}")
+            self.logger.debug(f"数据库连接池初始化成功: {server}/{database}")
             
         except Exception as e:
             self.logger.error(f"数据库连接池初始化失败: {str(e)}")

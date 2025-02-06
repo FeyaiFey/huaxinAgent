@@ -303,7 +303,7 @@ class SupplierUtils:
                 with open(process_dates_file, 'w', encoding='utf-8') as f:
                     json.dump(dates, f, ensure_ascii=False, indent=2)
                     
-                self.logger.info(f"已更新{supplier}的最后处理日期: {date}")
+                self.logger.debug(f"已更新{supplier}的最后处理日期: {date}")
                 return True
                 
             return False
@@ -419,7 +419,7 @@ class SupplierUtils:
                     # 重命名 JSON 文件
                     new_name = os.path.splitext(json_file)[0] + "_success_to_gzjc.json"
                     os.rename(json_path, os.path.join(json_dir, new_name))
-                    self.logger.info(f"已处理并重命名文件: {json_file}")
+                    self.logger.debug(f"已处理并重命名文件: {json_file}")
                     
                 except Exception as e:
                     self.logger.error(f"处理文件 {json_file} 时出错: {str(e)}")
