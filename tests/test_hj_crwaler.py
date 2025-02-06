@@ -1,16 +1,12 @@
 import sys
 import os
-import logging
-import time
-from datetime import datetime
-from typing import Dict, List
-import pandas as pd
 
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from modules.crawlers.base import BaseCrawler
 from modules.crawlers.hjtc_crawler import HJTCCrawler
+from modules.crawlers.xinf_crawler import XinfCrawler
 from utils.logger import Logger
 from utils.helpers import load_yaml
 

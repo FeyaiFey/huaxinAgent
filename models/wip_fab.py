@@ -13,6 +13,7 @@ class WipFab(BaseModel):
     purchaseOrder = Column(String(255), nullable=True, comment='采购订单号')
     itemName = Column(String(255), nullable=True, comment='产品名称')
     qty = Column(Integer, nullable=True, comment='数量')
+    supplier = Column(String(255), nullable=True, comment='供应商')
     
     # 状态信息
     status = Column(String(255), nullable=True, comment='状态')
@@ -64,6 +65,7 @@ class WipFab(BaseModel):
             'remainLayer': self.remainLayer,
             'currentPisition': self.currentPisition,
             'forecastDate': self.forecastDate.isoformat() if self.forecastDate else None,
+            'supplier': self.supplier,
             'finished_at': self.finished_at.isoformat() if self.finished_at else None,
             'completion_rate': self.completion_rate,
             'create_at': self.create_at.isoformat() if self.create_at else None,

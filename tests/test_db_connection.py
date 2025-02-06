@@ -1,16 +1,15 @@
 import sys
 import os
-import logging
 from sqlalchemy import text
 
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from infrastructure.database import DatabaseSession, DatabaseManager
+from utils.logger import Logger
 
 # 设置基本的日志配置
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = Logger(__name__)
 
 def test_database_connection():
     """测试数据库连接"""
@@ -44,7 +43,7 @@ def test_database_connection():
         return True
         
     except Exception as e:
-        logger.error(f"数据库连接测试失败: {str(e)}", exc_info=True)
+        logger.error(f"数据库连接测试失败: {str(e)}")
         return False
 
 if __name__ == "__main__":

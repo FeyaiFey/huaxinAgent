@@ -57,6 +57,7 @@ class HJTCCrawler(BaseCrawler):
         
         self.session.trust_env = False
 
+
     def login(self) -> bool:
         """
         登录系统
@@ -82,47 +83,6 @@ class HJTCCrawler(BaseCrawler):
         except Exception as e:
             self.logger.error(f"登录失败: {str(e)}")
             return False
-
-    # def get_wip_data(self) -> Optional[Dict]:
-    #     """
-    #     获取WIP数据
-        
-    #     Returns:
-    #         Optional[Dict]: WIP数据，失败返回None
-    #     """
-    #     try:
-    #         self.logger.info("开始获取WIP数据...")
-            
-    #         # 访问summary页面
-    #         summary_url = f"{self.BASE_URL}/myhj_web/Production/WIP/summary_drill"
-    #         response = self.get(summary_url)
-    #         response.raise_for_status()
-            
-    #         self.logger.info("访问summary页面成功")
-            
-    #         # 获取数据
-    #         dataset_url = f"{self.BASE_URL}/myhj_web/Production/WIP/summary_dataset_grid"
-    #         dataset_data = {
-    #             "Fab": "FAB8N",
-    #             "Stage": "ALL",
-    #             "ReportCategory": "ALL",
-    #             "CustomerPartType": "1",
-    #             "CustomerParts": "ALL",
-    #             "ShippingProductType": "1",
-    #             "ShippingProducts": "ALL",
-    #             "UmcProductType": "1",
-    #             "UmcProducts": "ALL"
-    #         }
-            
-    #         response = self.post(dataset_url, data=dataset_data)
-    #         response.raise_for_status()
-            
-    #         self.logger.info("获取WIP数据成功")
-    #         return response.json()
-            
-    #     except Exception as e:
-    #         self.logger.error(f"获取WIP数据失败: {str(e)}")
-    #         return None
 
     def download_wip_excel(self) -> Optional[str]:
         """
@@ -169,11 +129,6 @@ class HJTCCrawler(BaseCrawler):
         """运行爬虫任务"""
         if not self.login():
             return False
-            
-        # 获取数据
-        # data = self.get_wip_data()
-        # if not data:
-        #     return False
         
         # 下载Excel
         filepath = self.download_wip_excel()
@@ -184,13 +139,8 @@ class HJTCCrawler(BaseCrawler):
             self.logger.error(f"处理Excel失败")
             return False
 
-        # 将数据merge到sqlserver
-        # with DBProcessor() as db_processor:
-        #     if not db_processor.merge_to_db(df, "huaxinAdmin_wip_fab"):
-        #         self.logger.error(f"合并数据到sqlserver失败")
-        #         return False
-        # try:
-        #     os.remove(filepath)
-        # except Exception as e:
-        #     self.logger.error(f"删除文件失败: {str(e)}")
+        # 将数据记录到sqlserver
+        wip_fab_bll = WipFabBLL()
+        wip_fab_bll.update_supplier_progress(df.to_dict(orient="records"))
+        self.logger.info(f"和舰科技数据更新完成")
         return True

@@ -91,9 +91,9 @@ class Logger:
         """记录警告信息"""
         self.logger.warning(message)
     
-    def error(self, message):
+    def error(self, message, **kwargs):
         """记录错误信息"""
-        self.logger.error(message)
+        self.logger.error(message, **kwargs)
     
     def critical(self, message):
         """记录严重错误信息"""

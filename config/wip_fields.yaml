@@ -7,7 +7,7 @@ wip_fields:
         itemName: "SHP_PRD_NO"
         lot: "LOT"
         qty: "WIP_QTY"
-        status: "LOTSTATUS"
+        status: "STAGE"
         stage: "ROUTEDESC"
         layerCount: "ROUTESEQUENCE"
         currentPisition: "ROUTE_POSITION"

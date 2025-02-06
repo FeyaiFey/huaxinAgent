@@ -6,6 +6,7 @@ from dal.wip_fab import WipFabDAL
 from models.wip_fab import WipFab
 from utils.cache import cache_5min, cache_1hour, TimedCache
 from .base import BaseBLL
+import pandas as pd
 
 
 class WipFabBLL(BaseBLL[WipFab]):
@@ -178,23 +179,26 @@ class WipFabBLL(BaseBLL[WipFab]):
                 self.logger.warning(f"跳过缺少lot的数据: {item}")
                 continue
                 
-
             # 数据清洗和转换
             processed_item = {
                 'lot': item['lot'],
                 'purchaseOrder': item.get('purchaseOrder'),
                 'itemName': item.get('itemName'),
-                'qty': int(item['qty']) if item.get('qty') else None,
+                'qty': int(item['qty']) if item.get('qty') and pd.notna(item['qty']) else None,
                 'status': item.get('status', '在制'),
                 'stage': item.get('stage'),
-                'layerCount': int(item['layerCount']) if item.get('layerCount') else None,
-                'remainLayer': int(item['remainLayer']) if item.get('remainLayer') else None,
-                'currentPisition': item.get('currentPisition'),
+                'layerCount': int(item['layerCount']) if item.get('layerCount') and pd.notna(item['layerCount']) else None,
+                'remainLayer': int(item['remainLayer']) if item.get('remainLayer') and pd.notna(item['remainLayer']) else None,
+                'currentPisition': item.get('currentPisition') if item.get('currentPisition') and pd.notna(item.get('currentPisition')) else None,
                 'forecastDate': (
                     datetime.strptime(item['forecastDate'], '%Y-%m-%d').date()
-                    if item.get('forecastDate')
+                    if isinstance(item['forecastDate'], str)
+                    else item['forecastDate']
+                    if item.get('forecastDate') and pd.notna(item['forecastDate'])
                     else None
-                )
+                ),
+                'supplier': item.get('supplier'),
+                'finished_at': item.get('finished_at') if pd.notna(item.get('finished_at')) else None
             }
             
             # 验证数据合理性

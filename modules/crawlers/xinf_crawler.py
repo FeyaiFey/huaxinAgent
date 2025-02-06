@@ -4,7 +4,7 @@
 
 from datetime import datetime
 from typing import Optional, Dict, Any
-from .base_crawler import BaseCrawler
+from modules.crawlers.base import BaseCrawler
 import os
 import pandas as pd
 
@@ -163,19 +163,3 @@ class XinfCrawler(BaseCrawler):
             
         # 获取数据
         return self.get_wip_data()
-
-def main():
-    """主函数"""
-    try:
-        # 创建爬虫实例
-        crawler = XinfCrawler(username="314", password="68241373")
-        
-        # 运行爬虫
-        if not crawler.run():
-            return
-        
-    except Exception as e:
-        crawler.logger.error(f"程序执行出错: {str(e)}")
-
-if __name__ == "__main__":
-    main()

@@ -16,7 +16,6 @@ def process_hjtc_excel(file_path: str) -> Optional[str]:
     """
     logger = Logger(__name__)
     fields_config = load_yaml("config/wip_fields.yaml")
-    crawler_config = load_yaml("config/crawler_config.yaml")
     try:
         header = fields_config["wip_fields"]["晶圆厂"]["和舰科技"]["header"]
         names = fields_config["wip_fields"]["晶圆厂"]["和舰科技"]["names"]
@@ -36,8 +35,11 @@ def process_hjtc_excel(file_path: str) -> Optional[str]:
         df["supplier"] = "和舰科技"
         df["finished_at"] = pd.NaT
         df = df[data_format]
-
+        # 如果stage是STOCK,将相关字段设置为0
+        stock_mask = df["status"] == "STOCK"
+        df.loc[stock_mask, ["layerCount", "remainLayer", "currentPisition"]] = pd.NaT
         logger.info(f"成功处理和舰科技Excel文件")
+        print(df)
         return df
     
     except Exception as e:

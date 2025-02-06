@@ -1,10 +1,8 @@
-import logging
 from typing import Optional
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.exc import SQLAlchemyError
-import yaml
 import os
 from threading import Lock
 
@@ -97,7 +95,7 @@ class DatabaseManager:
             self.logger.info(f"数据库连接池初始化成功: {server}/{database}")
             
         except Exception as e:
-            self.logger.error(f"数据库连接池初始化失败: {str(e)}", exc_info=True)
+            self.logger.error(f"数据库连接池初始化失败: {str(e)}")
             raise
     
     def get_session(self) -> Session:
@@ -135,10 +133,10 @@ class DatabaseSession:
                 else:
                     # 如果有异常发生，回滚事务
                     self.session.rollback()
-                    self.logger.error(f"数据库操作失败: {str(exc_val)}", exc_info=True)
+                    self.logger.error(f"数据库操作失败: {str(exc_val)}")
             except SQLAlchemyError as e:
                 self.session.rollback()
-                self.logger.error(f"数据库事务处理失败: {str(e)}", exc_info=True)
+                self.logger.error(f"数据库事务处理失败: {str(e)}")
             finally:
                 self.session.close()
 

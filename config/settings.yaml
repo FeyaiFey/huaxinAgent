@@ -1,7 +1,7 @@
 # 数据库配置
 database:
-  driver: 'ODBC Driver 17 for SQL Server'
-  server: 'localhost'
+  driver: 'ODBC Driver 18 for SQL Server'
+  server: '192.168.200.21'
   database: 'E10'
   auth_type: 'sql'  # windows 或 sql
   echo: false  # 是否打印SQL语句

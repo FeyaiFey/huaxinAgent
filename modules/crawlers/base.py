@@ -8,7 +8,7 @@ import os
 import requests
 import urllib3
 from utils.logger import Logger
-
+from utils.helpers import get_env_var
 class BaseCrawler:
     """基础爬虫类"""
     
@@ -24,7 +24,7 @@ class BaseCrawler:
         
         # 创建session
         self.session = requests.Session()
-        self.config = config
+        self.config = self._replace_env_vars(config)
         
         # 禁用SSL警告
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -48,6 +48,14 @@ class BaseCrawler:
         self.session.trust_env = False
         
         self.logger.info("爬虫初始化完成")
+
+    def _replace_env_vars(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        """替换配置文件中的环境变量"""
+        for key, value in config.items():
+            if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
+                env_var = value[2:-1]
+                config[key] = get_env_var(env_var, value)
+        return config
     
     def _disable_system_proxy(self):
         """禁用系统代理"""
