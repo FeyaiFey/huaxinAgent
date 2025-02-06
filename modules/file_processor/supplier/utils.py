@@ -18,15 +18,14 @@ from utils.helpers import load_yaml
 class SupplierUtils:
     """供应商Excel处理器工具类"""
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self):
         """
         初始化工具类
-        
-        Args:
-            config: 送货单输出格式配置：config\delivery_json_format.yaml
         """
         self.logger = Logger(__name__)
-        self.config = config
+        self.delivery_config = load_yaml('config/delivery_json_format.yaml')
+        self.wip_fields_config = load_yaml('config/wip_fields.yaml')
+        self.settings = load_yaml('config/settings.yaml')
         
     def save_json(self, data: List[Dict[str, Any]], filename: str, supplier: str) -> Optional[str]:
         """
@@ -41,8 +40,11 @@ class SupplierUtils:
             Optional[str]: 保存成功返回文件路径，失败返回None
         """
         try:
+            # 从配置文件获取基础路径
+            base_dir = self.settings['file_management']['delivery_json_save_dir']
+            
             # 确保输出目录存在
-            output_dir = os.path.join(os.getenv('DELIVERY_JSON_PATH'), supplier)
+            output_dir = os.path.join(base_dir, supplier)
             os.makedirs(output_dir, exist_ok=True)
             
             # 构建完整的文件路径
@@ -70,8 +72,12 @@ class SupplierUtils:
             bool: 移动成功返回True，失败返回False
         """
         try:
+            if not excel_path or not os.path.exists(excel_path):
+                self.logger.error(f"源Excel文件不存在: {excel_path}")
+                return False
+
             # 确保归档目录存在
-            archive_dir = os.path.join(os.getenv('DELIVERY_NOTE_PATH'), supplier)
+            archive_dir = os.path.join('attachments/delivery_notes', supplier)
             os.makedirs(archive_dir, exist_ok=True)
             
             # 构建目标路径
@@ -197,7 +203,7 @@ class SupplierUtils:
         """
         try:
             # 获取字段定义
-            fields = self.config['fields']
+            fields = self.delivery_config['fields']
             formatted_data = {}
             
             # 验证每个字段
@@ -336,17 +342,25 @@ class SupplierUtils:
         """
         try:
             # 检查工作进程Excel是否可写
-            gzjc_path = load_yaml('config/settings.yaml').get('file_management').get('gzjc_path')
-            if not gzjc_path or not os.path.exists(gzjc_path):
+            gzjc_path = self.settings['file_management']['gzjc_path']
+            if not gzjc_path:
+                self.logger.error("工作进程Excel文件路径未配置")
+                return False
+                
+            # 检查文件是否存在
+            if not os.path.exists(gzjc_path):
                 self.logger.error(f"工作进程Excel文件不存在: {gzjc_path}")
                 return False
                 
             # 检查文件是否可写
             try:
-                with open(gzjc_path, 'a') as f:
+                with open(gzjc_path, 'r+b') as f:
                     pass
             except PermissionError:
                 self.logger.error(f"工作进程Excel文件无法写入: {gzjc_path}")
+                return False
+            except Exception as e:
+                self.logger.error(f"工作进程Excel文件访问失败: {str(e)}")
                 return False
             
             # 加载工作簿
@@ -359,7 +373,7 @@ class SupplierUtils:
             last_row = ws.max_row + 1
                 
             # 获取JSON文件目录
-            json_dir = os.path.join(os.getenv('DELIVERY_JSON_PATH'), supplier)
+            json_dir = os.path.join(self.settings['file_management']['delivery_json_save_dir'], supplier)
             if not os.path.exists(json_dir):
                 self.logger.error(f"JSON文件目录不存在: {json_dir}")
                 return False

@@ -11,16 +11,13 @@ from utils.logger import Logger
 class BaseDeliveryExcelHandler(ABC):
     """供应商Excel处理器基类"""
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self):
         """
         初始化处理器
-        
-        Args:
-            config: 送货单输出格式配置：config\delivery_json_format.yaml
         """
         self.logger = Logger(__name__)
-        self.config = config
-        self.utils = SupplierUtils(config)
+        self.utils = SupplierUtils()
+
     
     @abstractmethod
     def process(self, match_result: Dict[str, Any]) -> Optional[Dict[str, Any]]:

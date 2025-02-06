@@ -278,11 +278,3 @@ rules:
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/上华FAB2"   
     enabled: true
-
-  - name: 默认规则
-    category: "未分类"
-    supplier: "未知"
-    actions:
-      save_attachment: false
-      mark_as_read: false
-      attachment_folder: "attachments/temp/默认"

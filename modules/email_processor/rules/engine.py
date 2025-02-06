@@ -72,7 +72,7 @@ class RuleEngine:
         """加载规则配置"""
         try:
             email_rules = load_yaml(rules_file)
-            # self.logger.info(f"成功加载{len(email_rules['rules'])}条规则")
+            self.logger.debug(f"成功加载{len(email_rules['rules'])}条规则")
             return email_rules        
         except Exception as e:
             self.logger.error(f"加载规则配置失败: {str(e)}")
@@ -203,7 +203,7 @@ class RuleEngine:
         
         # 如果没有匹配的规则，使用默认规则
         default_rule = self.rules.get('默认规则', {})
-        self.logger.info("邮件使用默认规则处理")
+        self.logger.debug("邮件使用默认规则处理")
         return {
             'actions': default_rule.get('actions', {}),
             'name': default_rule.get('name', 'unnamed_rule'),
