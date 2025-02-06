@@ -188,7 +188,8 @@ class WipFabDAL(BaseDAL[WipFab]):
         
         # 处理需要标记为完成的记录
         for lot, record in existing_lots.items():
-            if lot not in new_lot_set and not record.is_completed:
+            # 如果记录不在新数据中，且未完成，且没有完工日期，则标记为完成
+            if lot not in new_lot_set and not record.is_completed and not record.finished_at:
                 record.mark_as_completed()
                 stats['completed'] += 1
         
