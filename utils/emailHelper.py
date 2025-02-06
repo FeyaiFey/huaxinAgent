@@ -2,6 +2,8 @@
 
 import chardet
 import email
+import os
+from pathlib import Path
 from email import message
 from imaplib import IMAP4_SSL
 
@@ -121,17 +123,89 @@ class EmailHelper:
             'subject': subject
         }
     
-    def is_attachment(self, part: message.Message) -> bool:
+    def _is_attachment(self, part: message.Message) -> bool:
         """检查是否为附件"""
         return (part.get_content_maintype() != 'multipart' and 
                 part.get('Content-Disposition') is not None)
 
-    def get_attachment_filename(self, part: message.Message) -> Optional[str]:
+    def _get_attachment_filename(self, part: message.Message) -> Optional[str]:
         """获取附件文件名"""
         filename = part.get_filename()
         if filename:
             return self.decode_header_value(filename)
         return None
+    
+    def _save_attachment(self, part: message.Message, folder: str) -> bool:
+        """保存附件"""
+        filename = self._get_attachment_filename(part)
+        if filename:
+            filepath = os.path.join(folder, filename)
+            with open(filepath, 'wb') as f:
+                f.write(part.get_payload(decode=True))
+            return True
+        return False
+    
+    def _save_attachment_file(self, part: message.Message, filename: str,
+                            email_id: bytes, folder_path: Path) -> Optional[Path]:
+        """保存附件文件"""
+        try:
+            self.logger.info(f"处理附件: {filename}")
+            
+            # 确保folder_path是Path对象
+            folder_path = Path(folder_path)
+            
+            # 确保目录存在
+            folder_path.mkdir(parents=True, exist_ok=True)
+            
+            # 构建文件路径
+            filepath = folder_path.joinpath(filename)
+            
+            # 检查文件是否已存在
+            if filepath.exists():
+                self.logger.info(f"附件已存在，跳过下载: {filename}")
+                return filepath
+            
+            # 保存文件
+            with filepath.open('wb') as f:
+                f.write(part.get_payload(decode=True))
+                
+            self.logger.info(f"附件已保存: {filepath}")
+            return filepath
+            
+        except Exception as e:
+            self.logger.error(f"保存附件失败: {str(e)}")
+            return None
+
+    
+    def save_attachments(self, msg: message.Message, email_id: bytes, 
+                        folder_path: Path) -> List[str]:
+        """
+        保存邮件附件
+        
+        遍历邮件的所有部分，保存附件到指定文件夹
+        
+        参数:
+            msg: 邮件消息对象
+            email_id: 邮件ID
+            folder_path: 保存文件夹路径
+            
+        返回:
+            list: 保存的附件文件路径列表
+        """
+        saved_files = []
+        
+        for part in msg.walk():
+            if not self._is_attachment(part):
+                continue
+                
+            filename = self._get_attachment_filename(part)
+            if filename:
+                filepath = self._save_attachment_file(part, filename, email_id, folder_path)
+                if filepath:
+                    saved_files.append(str(filepath))
+                    
+        return saved_files
+
     
     def mark_email_as_read(self, email_id: Union[str, bytes]) -> bool:
         """
@@ -153,3 +227,4 @@ class EmailHelper:
         except Exception as e:
             self.logger.error(f"标记邮件为已读失败: {str(e)}")
             return False
+    

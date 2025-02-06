@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 from typing import Optional, Dict, Any
 from modules.crawlers.base import BaseCrawler
-from modules.file_processor.hjtc_handler import process_hjtc_excel
+from modules.file_processor.supplier.hjtc_wip_handler import process_hjtc_excel
 from bll.wip_fab import WipFabBLL
 
 class HJTCCrawler(BaseCrawler):

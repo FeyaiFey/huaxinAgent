@@ -1,0 +1,28 @@
+fields:
+  - name: "送货日期"
+    type: "date"
+    required: true
+  - name: "订单号"
+    type: "string"
+    required: true
+  - name: "品名"
+    type: "string"
+    required: true
+  - name: "晶圆名称"
+    type: "string"
+    required: true
+  - name: "晶圆批号"
+    type: "string"
+    required: true
+  - name: "封装形式"
+    type: "string"
+    required: true
+  - name: "数量"
+    type: "integer"
+    required: true
+  - name: "打印批号"
+    type: "string"
+    required: false
+  - name: "供应商"
+    type: "string"
+    required: true

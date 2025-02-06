@@ -8,10 +8,12 @@ pyodbc==4.0.39
 
 # 邮件处理
 imap-tools==1.0.0
+chardet==5.2.0
 
 # 数据处理
 pandas==1.4.4
 openpyxl==3.1.2
+xlrd==2.0.1
 
 # 自动化
 pyautogui==0.9.54

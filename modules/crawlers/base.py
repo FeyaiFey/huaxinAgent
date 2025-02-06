@@ -47,7 +47,7 @@ class BaseCrawler:
 
         self.session.trust_env = False
         
-        self.logger.info("爬虫初始化完成")
+        # self.logger.info("爬虫初始化完成")
 
     def _replace_env_vars(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """替换配置文件中的环境变量"""

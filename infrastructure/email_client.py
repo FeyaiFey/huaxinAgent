@@ -16,7 +16,7 @@ from utils.helpers import load_yaml, ensure_dir, get_env_var
 from utils.cache import cache_5min
 
 
-class IMAPEmailClient:
+class EmailClient:
     """IMAP邮件客户端"""
     
     def __init__(self, config_path: str):
@@ -114,7 +114,7 @@ class IMAPEmailClient:
             self.logger.error(f"获取未读邮件失败: {str(e)}")
             raise
     
-    def process_email(self, email_id: Union[str, bytes]) -> bool:
+    def process_email(self, email_id: Union[str, bytes]) -> Dict[str, Any]:
         """
         处理单个邮件
         
@@ -124,7 +124,15 @@ class IMAPEmailClient:
             email_id: 邮件ID
             
         返回:
-            bool: 处理结果，True表示处理成功，False表示处理失败
+            Dict[str, Any]: 匹配结果
+            枚举：
+            {
+                'actions': {'save_attachment': True, 'mark_as_read': True, 'attachment_folder': 'attachments/temp/封装送货单/池州华宇'},
+                'name': '封装送货单-池州华宇',
+                'category': '封装送货单',
+                'supplier': '池州华宇',
+                'attachments': ['attachments/temp/封装送货单/池州华宇/1.pdf', 'attachments/temp/封装送货单/池州华宇/2.pdf']
+            }
             
         异常:
             RuntimeError: 处理失败时抛出
@@ -152,21 +160,26 @@ class IMAPEmailClient:
             match_result = self.rule_engine.apply_rules(email_data)
 
             category = match_result['category']
+
+            # 如果未匹配到任何规则，则保持未读状态
             if category == '未分类':
                 self.logger.info(f"邮件不匹配任何规则，保持未读状态: {email_data['subject']}")
-                return True
+                return {}
+            
+            # 保存附件
+            try:
+                attachments = email_helper.save_attachments(msg, email_id, match_result['actions']['attachment_folder'])
+                match_result['attachments'] = attachments
+            except Exception as e:
+                self.logger.error(f"保存附件失败: {str(e)}")
 
-            # TODO 处理邮件类 核心
-            self.logger.info("处理邮件待开发!")
-            
-            
             # 标记为已读
             if match_result['actions'].get('mark_as_read', True):
                 email_helper.mark_email_as_read(email_id)
 
             self.logger.info(f"邮件处理完成: [{category}] {email_data['subject']}")
-            return True
+            return match_result
             
         except Exception as e:
             self.logger.error(f"处理邮件失败: {str(e)}")
-            return False
+            return {}

@@ -8,7 +8,7 @@ from typing import Dict, List
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from infrastructure.email_client import IMAPEmailClient
+from infrastructure.email_client import EmailClient
 from utils.logger import Logger
 from utils.emailHelper import EmailHelper
 
@@ -22,7 +22,7 @@ def test_email_system():
         # 1. 初始化邮件客户端
         logger.info("\n1. 初始化邮件客户端")
         start_time = time.time()
-        email_client = IMAPEmailClient('config/email_config.yaml')
+        email_client = EmailClient('config/email_config.yaml')
         
         init_time = time.time() - start_time
         logger.info(f"初始化耗时: {init_time:.4f}秒")
