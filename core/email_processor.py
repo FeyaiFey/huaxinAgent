@@ -66,6 +66,8 @@ class EmailProcessor:
                         result = self.delivery_handler.process_delivery_excel(match_result)
                         stats['processed'] += 1
                         self.logger.debug(f"处理结果: {result}")
+
+                    # TODO: 处理其他规则 封装进度表\fab进度表\测试报告\
                         
                 except Exception as e:
                     stats['failed'] += 1
