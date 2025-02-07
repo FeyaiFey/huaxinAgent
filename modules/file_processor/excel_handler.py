@@ -1,9 +1,9 @@
 from typing import Dict, List, Any
 
 from utils.logger import Logger
-from .supplier.hisemi_delivery_handler import HisemiHandler
-from .supplier.hanqi_delivery_handler import HanQiHandler
-from .supplier.xinfeng_delivery_handler import XinFengHandler
+from .supplier.hisemi_delivery_handler import HisemiDeliveryHandler
+from .supplier.hanqi_delivery_handler import HanQiDeliveryHandler
+from .supplier.xinfeng_delivery_handler import XinFengDeliveryHandler
 from .supplier.psmc_wip_handler import PsmcHandler
 from .supplier.csmc_fab1_wip_handler import CsmcFAB1Handler
 from .supplier.csmc_fab2_wip_handler import CsmcFAB2Handler
@@ -18,9 +18,9 @@ class ExcelHandler:
     
     # 供应商处理器映射
     SUPPLIER_HANDLERS = {
-        '封装送货单_池州华宇': HisemiHandler,
-        '封装送货单_山东汉旗': HanQiHandler,
-        '封装送货单_江苏芯丰': XinFengHandler,
+        '封装送货单_池州华宇': HisemiDeliveryHandler,
+        '封装送货单_山东汉旗': HanQiDeliveryHandler,
+        '封装送货单_江苏芯丰': XinFengDeliveryHandler,
         '进度表_荣芯': RsmcHandler,
         '进度表_上华FAB1': CsmcFAB1Handler,
         '进度表_上华FAB2': CsmcFAB2Handler,

@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from .base_delivery_handler import BaseDeliveryExcelHandler
 from utils.logger import Logger
 
-class XinFengHandler(BaseDeliveryExcelHandler):
+class XinFengDeliveryHandler(BaseDeliveryExcelHandler):
     """
     江苏芯丰供应商Excel处理器
     

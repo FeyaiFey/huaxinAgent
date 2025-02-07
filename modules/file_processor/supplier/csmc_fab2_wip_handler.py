@@ -31,7 +31,7 @@ class CsmcFAB2Handler(BaseDeliveryExcelHandler):
             }
             
         Returns:
-            Optional[Dict[str, Any]]: 处理结果
+            pd.DataFrame: 处理结果
         """
         try:
             header = self.config["header"]

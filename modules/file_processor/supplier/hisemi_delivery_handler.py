@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from .base_delivery_handler import BaseDeliveryExcelHandler
 from utils.logger import Logger
 
-class HisemiHandler(BaseDeliveryExcelHandler):
+class HisemiDeliveryHandler(BaseDeliveryExcelHandler):
     """
     池州华宇供应商Excel处理器
     

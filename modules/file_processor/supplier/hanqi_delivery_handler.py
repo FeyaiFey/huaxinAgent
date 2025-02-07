@@ -12,7 +12,7 @@ from openpyxl import load_workbook
 from .base_delivery_handler import BaseDeliveryExcelHandler
 from utils.logger import Logger
 
-class HanQiHandler(BaseDeliveryExcelHandler):
+class HanQiDeliveryHandler(BaseDeliveryExcelHandler):
     """
     汉旗供应商Excel处理器
 
