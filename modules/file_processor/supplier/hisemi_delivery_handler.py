@@ -25,6 +25,8 @@ class HisemiHandler(BaseDeliveryExcelHandler):
     7. 将Excel文件移动到归档目录
     """
     def __init__(self):
+        """初始化处理器"""
+        super().__init__()  # 调用父类的__init__方法
         self.logger = Logger(__name__)
     
     def process(self, match_result: Dict[str, Any]) -> Optional[Dict[str, Any]]:

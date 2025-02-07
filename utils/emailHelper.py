@@ -169,7 +169,7 @@ class EmailHelper:
             with filepath.open('wb') as f:
                 f.write(part.get_payload(decode=True))
                 
-            self.logger.info(f"附件已保存: {filepath}")
+            self.logger.debug(f"附件已保存: {filepath}")
             return filepath
             
         except Exception as e:
@@ -178,7 +178,7 @@ class EmailHelper:
 
     
     def save_attachments(self, msg: message.Message, email_id: bytes, 
-                        folder_path: Path) -> List[str]:
+                        folder_path: Path, allowed_extensions: List[str] = None) -> List[str]:
         """
         保存邮件附件
         
@@ -188,6 +188,7 @@ class EmailHelper:
             msg: 邮件消息对象
             email_id: 邮件ID
             folder_path: 保存文件夹路径
+            allowed_extensions: 允许下载的附件类型列表
             
         返回:
             list: 保存的附件文件路径列表
@@ -200,6 +201,13 @@ class EmailHelper:
                 
             filename = self._get_attachment_filename(part)
             if filename:
+                # 检查文件扩展名是否在允许列表中
+                if allowed_extensions:
+                    file_ext = os.path.splitext(filename)[1].lower()
+                    if file_ext not in allowed_extensions:
+                        self.logger.debug(f"跳过不允许的文件类型: {filename}")
+                        continue
+
                 filepath = self._save_attachment_file(part, filename, email_id, folder_path)
                 if filepath:
                     saved_files.append(str(filepath))

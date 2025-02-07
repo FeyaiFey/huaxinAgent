@@ -26,6 +26,8 @@ class HanQiHandler(BaseDeliveryExcelHandler):
     7. 将Excel文件移动到归档目录
     """
     def __init__(self):
+        """初始化处理器"""
+        super().__init__()  # 调用父类的__init__方法
         self.logger = Logger(__name__)
     
 
@@ -171,7 +173,7 @@ class HanQiHandler(BaseDeliveryExcelHandler):
                     data_list = []
                     
                     # 从第7行开始读取数据 (索引从0开始，所以是6)
-                    for row in range(6, sheet.nrows):
+                    for row in range(7, sheet.nrows):
                         # 检查是否到达表格末尾（Total行）
                         if 'Total' in str(sheet.cell_value(row, 7)):  # H列对应索引7
                             break

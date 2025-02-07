@@ -25,6 +25,8 @@ class XinFengHandler(BaseDeliveryExcelHandler):
     7. 将Excel文件移动到归档目录
     """
     def __init__(self):
+        """初始化处理器"""
+        super().__init__()  # 调用父类的__init__方法
         self.logger = Logger(__name__)
     
     def process(self, match_result: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -146,7 +148,7 @@ class XinFengHandler(BaseDeliveryExcelHandler):
             data_list = []
             
             # 从第9行开始遍历数据，直到遇到空行
-            for row in range(9, sheet.max_row + 1):
+            for row in range(10, sheet.max_row + 1):
                 # 检查是否到达空行
                 if not any(sheet[f'{col}{row}'].value for col in ['A','B','C','D','E']):
                     break

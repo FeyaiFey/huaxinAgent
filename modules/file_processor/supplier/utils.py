@@ -54,7 +54,7 @@ class SupplierUtils:
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
                 
-            self.logger.info(f"已保存JSON数据 [{json_path}]")
+            self.logger.debug(f"已保存JSON数据 [{json_path}]")
             return json_path
         except Exception as e:
             self.logger.error(f"保存JSON数据失败 [{filename}]: {str(e)}")

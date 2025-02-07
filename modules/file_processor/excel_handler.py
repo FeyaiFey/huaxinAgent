@@ -18,13 +18,13 @@ class ExcelHandler:
     
     # 供应商处理器映射
     SUPPLIER_HANDLERS = {
-        '池州华宇': HisemiHandler,
-        '山东汉旗': HanQiHandler,
-        '江苏芯丰': XinFengHandler,
-        '荣芯': RsmcHandler,
-        '上华FAB1': CsmcFAB1Handler,
-        '上华FAB2': CsmcFAB2Handler,
-        '力积电': PsmcHandler,
+        '封装送货单_池州华宇': HisemiHandler,
+        '封装送货单_山东汉旗': HanQiHandler,
+        '封装送货单_江苏芯丰': XinFengHandler,
+        '进度表_荣芯': RsmcHandler,
+        '进度表_上华FAB1': CsmcFAB1Handler,
+        '进度表_上华FAB2': CsmcFAB2Handler,
+        '进度表_力积电': PsmcHandler,
         # 可以继续添加其他供应商
     }
     
@@ -54,16 +54,18 @@ class ExcelHandler:
         """
         try:
             supplier = match_result.get('supplier')
-            if not supplier:
-                self.logger.error(f"email_data中缺少供应商信息")
+            category = match_result.get('category')
+            merge_supplier = f"{category}_{supplier}"
+            if not supplier or not category:
+                self.logger.error(f"email_data中缺少供应商或类别信息")
                 return None
                 
-            if supplier not in self.SUPPLIER_HANDLERS:
-                self.logger.error(f"未找到供应商[{supplier}]的处理器")
+            if merge_supplier not in self.SUPPLIER_HANDLERS:
+                self.logger.error(f"未找到[{merge_supplier}]的处理器")
                 return None
                 
             # 实例化对应的处理器
-            handler_class = self.SUPPLIER_HANDLERS[supplier]
+            handler_class = self.SUPPLIER_HANDLERS[merge_supplier]
             handler = handler_class()
             
             # 处理Excel文件

@@ -43,6 +43,6 @@ file_management:
   temp_folder: './temp'
   log_folder: './logs'
   max_temp_age: 7  # 临时文件保存天数
-  gzjc_path: '\\\\fanlm\\生产共享\\工作进程 - 副本.xlsx'  # 使用双反斜杠表示网络路径
+  gzjc_path: '\\fanlm\生产共享\工作进程 - 副本.xlsx'  # 使用双反斜杠表示网络路径
   delivery_json_save_dir: 'attachments/delivery'
   delivery_note_dir: 'attachments/delivery_notes'  # 添加送货单归档目录配置

@@ -198,7 +198,8 @@ class RuleEngine:
                     'actions': rule.get('actions', {}),
                     'name': rule.get('name', 'unnamed_rule'),
                     'category': rule.get('category', '未分类'),
-                    'supplier': rule.get('supplier', '未知')
+                    'supplier': rule.get('supplier', '未知'),
+                    'allowed_extensions': rule.get('allowed_extensions', [])
                 }
         
         # 如果没有匹配的规则，使用默认规则
@@ -208,5 +209,6 @@ class RuleEngine:
             'actions': default_rule.get('actions', {}),
             'name': default_rule.get('name', 'unnamed_rule'),
             'category': default_rule.get('category', '未分类'),
-            'supplier': default_rule.get('supplier', '未知')
+            'supplier': default_rule.get('supplier', '未知'),
+            'allowed_extensions': default_rule.get('allowed_extensions', [])
         }

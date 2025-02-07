@@ -21,6 +21,9 @@ rules:
       save_attachment: true    # 是否保存附件
       mark_as_read: true    # 是否标记为已读
       attachment_folder: attachments/temp/封装送货单/池州华宇    # 附件保存的子文件夹名
+    allowed_extensions:    # 允许下载的附件类型
+      - .xlsx
+      - .xls
     enabled: true    # 是否启用该规则
 
   - name: 封装送货单-山东汉旗   
@@ -45,6 +48,9 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/封装送货单/山东汉旗"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true   
 
   - name: 封装送货单-江苏芯丰   
@@ -69,7 +75,10 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/封装送货单/江苏芯丰"   
+      attachment_folder: "attachments/temp/封装送货单/江苏芯丰" 
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true
 
   - name: 封装送货单-江苏恩微   
@@ -93,7 +102,10 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/封装送货单/江苏恩微"   
+      attachment_folder: "attachments/temp/封装送货单/江苏恩微" 
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true
 
   - name: 测试报告-无锡华宇   
@@ -117,7 +129,12 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/测试报告/无锡华宇"   
+      attachment_folder: "attachments/temp/测试报告/无锡华宇" 
+    allowed_extensions:    
+      - .xlsx
+      - .xls
+      - .rar
+      - .zip
     enabled: true
 
   - name: 测试报告-苏州拓芯威   
@@ -138,6 +155,11 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/测试报告/苏州拓芯威"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
+      - .rar
+      - .zip
     enabled: true
 
   - name: 测试报告-苏工院   
@@ -158,6 +180,11 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/测试报告/苏工院"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
+      - .rar
+      - .zip
     enabled: true
 
   - name: 进度表-池州华宇   
@@ -178,13 +205,15 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/池州华宇"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true
 
   - name: 进度表-无锡华润安盛   
     category: "进度表"
     supplier: "无锡华润安盛"   
     conditions:   
-
       from:   
         - atxks_b2b_report@atxsemicon.com
       to:   
@@ -200,6 +229,9 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/无锡华润安盛"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true
 
   - name: 进度表-山东汉旗   
@@ -220,6 +252,9 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/山东汉旗"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true
 
   - name: 进度表-力积电   
@@ -241,7 +276,11 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/力积电"   
-    enabled: true
+    allowed_extensions:    
+      - .xlsx
+      - .xls
+      - .csv
+    enabled: true   
 
   - name: 进度表-上华FAB1   
     category: "进度表"
@@ -259,6 +298,9 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/上华FAB1"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true
 
   - name: 进度表-上华FAB2   
@@ -277,4 +319,7 @@ rules:
       save_attachment: true   
       mark_as_read: true   
       attachment_folder: "attachments/temp/进度表/上华FAB2"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
     enabled: true

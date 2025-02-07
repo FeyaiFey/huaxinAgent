@@ -168,7 +168,14 @@ class EmailClient:
             
             # 保存附件
             try:
-                attachments = email_helper.save_attachments(msg, email_id, match_result['actions']['attachment_folder'])
+                # 获取允许的附件类型
+                allowed_extensions = match_result.get('allowed_extensions', [])
+                attachments = email_helper.save_attachments(
+                    msg, 
+                    email_id, 
+                    match_result['actions']['attachment_folder'],
+                    allowed_extensions
+                )
                 match_result['attachments'] = attachments
             except Exception as e:
                 self.logger.error(f"保存附件失败: {str(e)}")
