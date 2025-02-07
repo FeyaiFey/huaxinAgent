@@ -81,16 +81,16 @@ wip_fields:
   封装厂:
     池州华宇:
       关键字段映射:
-        客户订单号(Customer PO#): "purchaseOrder"
+        客户订单号(Customer PO#): "订单号"
         研磨(Grinding): "研磨"
         切割(Dicing Saw): "切割"
         待装片(Waiting For DB): "待装片"
         装片1(DB1): "装片"
         银胶固化1(Epoxy curing 1): "银胶固化"
-        PLASMA1: "等离子清洗"
+        PLASMA1: "等离子清洗1"
         键合(WB): "键合"
         三目检(3th VI): "三目检"
-        PLASMA2: "等离子清洗"
+        PLASMA2: "等离子清洗2"
         塑封(MD): "塑封"
         后固化: "后固化"
         IR_REFLOW: "回流焊"
@@ -103,22 +103,18 @@ wip_fields:
         包装(PACKING): "包装"
         待入库(Waiting Storage): "待入库"
         TOTAL(TOTAL): "在线合计"
-      扣留信息字段:
-        扣留信息(Hold): "扣留信息"
-      库存字段:
         库存数量(Stock): "仓库库存"
+        扣留信息(Hold): "扣留信息"
 
     山东汉旗:
       关键字段映射:
-        客户订单号 : "purchaseOrder"
+        客户订单号 : "订单号"
         Die_Bonding粘片 : "装片"
         Pre_Curing前固化 : "银胶固化"
         Wire_Bonding键合 : "键合"
         Mol_ding模封 : "塑封"
         After_Curing后固化 : "后固化"
-        Screeding冲中筋 : "冲中筋"
         Plating电镀 : "电镀"
-        Bakebefore_TrimForm冲筋前烘烤 : "冲筋前烘烤"
         Bakebefore_Mark打印前烘烤 : "打印前烘烤"
         Mar_king打印 : "打印"
         Trim_Form切筋打弯 : "切筋成型"
@@ -128,29 +124,33 @@ wip_fields:
         Testtu_bassembly测试管装 : "测试管装"
         Packing包装 : "包装"
         在线合计 : "在线合计"
-      库存字段:
         入库合计 : "仓库库存"
 
-    data_format:
-      - purchaseOrder
-      - 研磨
-      - 切割
-      - 待装片
-      - 装片
-      - 银胶固化
-      - 等离子清洗
-      - 键合
-      - 三目检
-      - 塑封
-      - 后固化
-      - 冲中筋
-      - 回流焊
-      - 电镀
-      - 打印
-      - 后切割
-      - 切筋成型
-      - 测试
-      - 包装
-      - 在线合计
-      - 仓库库存
-      - 扣留信息
+    craft_forecast:
+      订单号: 0
+      研磨: 35
+      切割: 34
+      待装片: 33
+      装片: 31
+      银胶固化: 28
+      等离子清洗1: 25
+      键合: 15
+      三目检: 14
+      等离子清洗2: 14
+      塑封: 13
+      后固化: 10
+      回流焊: 9
+      电镀: 8
+      打印: 7
+      后切割: 6
+      切筋成型: 5
+      测编打印: 4
+      外观检: 3
+      包装: 2
+      待入库: 1
+      在线合计: 0
+      仓库库存: 1
+      扣留信息: 0
+
+
+

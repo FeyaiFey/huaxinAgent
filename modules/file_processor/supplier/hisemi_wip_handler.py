@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 from typing import Dict, List, Optional, Any
 
 from .base_delivery_handler import BaseDeliveryExcelHandler
@@ -12,7 +13,7 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
     def __init__(self):
         fields_config = load_yaml("config/wip_fields.yaml")
         self.config = fields_config["wip_fields"]["封装厂"]["池州华宇"]
-        self.data_format = fields_config["wip_fields"]["data_format"]
+        self.craft_forecast = fields_config["wip_fields"]["craft_forecast"]
         self.logger = Logger(__name__)
 
     def process(self, match_result: Dict[str, Any]) -> pd.DataFrame:
@@ -35,9 +36,7 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
         """
         try:
             key_columns = self.config["关键字段映射"]
-            hold_columns = self.config["扣留信息字段"]
-            stock_columns = self.config["库存字段"]
-            data_format = self.data_format
+            data_format = self.craft_forecast.keys()
             names = list(key_columns.keys())
             attachments = match_result.get("attachments")
             if not attachments:
@@ -70,7 +69,17 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
             mapping_dict = {k: v for k, v in key_columns.items()}
             # 重命名列
             df.rename(columns=mapping_dict, inplace=True)
+
+            df = df[data_format]
+
+
+
+
+
+
         
         except Exception as e:
             self.logger.error(f"处理Excel文件时发生错误: {e}")
             return None
+        
+    
