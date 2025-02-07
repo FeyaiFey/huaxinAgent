@@ -10,7 +10,7 @@ wip_fields:
         status: "STAGE"
         stage: "ROUTEDESC"
         layerCount: "ROUTESEQUENCE"
-        currentPisition: "ROUTE_POSITION"
+        currentPosition: "ROUTE_POSITION"
         forecastDate: "SHIP_FCST_DATE"
     
     力积电:
@@ -25,13 +25,8 @@ wip_fields:
         layerCount: "LAYER_COUNT"
         remainLayer: "REMAIN_LAYER"
         forecastDate: "FORECAST_DATE"
-      operations:
-        - type: "calculate"
-          target_field: "currentPisition"
-          operation: "subtract"
-          left: "LAYER_COUNT"
-          right: "REMAIN_LAYER" 
-    上华:
+  
+    上华FAB1:
       header: 0
       names:
         purchaseOrder: "PO"
@@ -42,19 +37,19 @@ wip_fields:
         stage: "STAGE"
         layerCount: "STAGE_STEP_NO"
         forecastDate: "FORECAST_FAB_OUT_DATE"
-      operations:
-        - type: "split"
-          source: "STAGE_STEP_NO"
-          separator: "/"
-          target_fields:
-            currentPisition: 0
-            layerCount: 1
-        - type: "calculate"
-          target_field: "remainLayer"
-          operation: "subtract"
-          left: "layerCount"  # 使用拆分后的字段
-          right: "currentPisition"  # 使用拆分后的字段
 
+    上华FAB2:
+      header: 0
+      names:
+        purchaseOrder: "PO"
+        itemName: "CSMC_PARTNAME" 
+        lot: "LOT_ID"
+        qty: "CURRENT_QTY"
+        status: "STATUS"
+        stage: "STAGE"
+        layerCount: "STAGE_STEP_NO"
+        forecastDate: "FORECAST_FAB_OUT_DATE"
+      
     荣芯:
       header: 0
       names:
@@ -67,13 +62,7 @@ wip_fields:
         layerCount: "Total layers"
         remainLayer: "Rem. Layers"
         forecastDate: "Forecast Fab Out Date"
-      operations:
-        - type: "calculate"
-          target_field: "currentPisition"
-          operation: "subtract"
-          left: "Total layers"
-          right: "Rem. Layers"
-
+      
   data_format:
     - purchaseOrder
     - itemName
@@ -83,7 +72,7 @@ wip_fields:
     - stage
     - layerCount
     - remainLayer
-    - currentPisition
+    - currentPosition
     - forecastDate
     - supplier
     - finished_at

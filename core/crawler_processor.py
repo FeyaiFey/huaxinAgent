@@ -82,6 +82,16 @@ class CrawlerProcessor:
         Returns:
             运行统计信息
         """
+        # 检查爬虫功能是否启用
+        if not self.settings['features']['crawler']['enabled']:
+            self.logger.debug("爬虫功能已在全局配置中禁用")
+            return {
+                'total': 0,
+                'successful': 0,
+                'failed': 0,
+                'results': {}
+            }
+            
         stats = {
             'total': len(self.crawlers),
             'successful': 0,
@@ -150,6 +160,16 @@ class CrawlerProcessor:
         Returns:
             运行统计信息
         """
+        # 检查爬虫功能是否启用
+        if not self.settings['features']['crawler']['enabled']:
+            self.logger.debug("爬虫功能已在全局配置中禁用")
+            return {
+                'total': 0,
+                'successful': 0,
+                'failed': 0,
+                'results': {}
+            }
+            
         # 筛选指定的爬虫
         selected_crawlers = [
             crawler for crawler in self.crawlers

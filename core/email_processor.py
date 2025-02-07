@@ -7,7 +7,8 @@ from typing import Dict, Any
 
 from utils.logger import Logger
 from infrastructure.email_client import EmailClient
-from modules.file_processor.delivery_handler import DeliveryHandler
+from modules.file_processor.excel_handler import ExcelHandler
+from bll.wip_fab import WipFabBLL
 # from modules.erp_integration.adapter import ERPAdapter
 
 class EmailProcessor:
@@ -17,7 +18,8 @@ class EmailProcessor:
         """初始化邮件处理器"""
         self.logger = Logger(__name__)
         self._init_email_client()
-        self.delivery_handler = DeliveryHandler()
+        self.excel_handler = ExcelHandler()
+        self.wip_fab_bll = WipFabBLL()
         # self.erp_adapter = ERPAdapter()
 
     def _init_email_client(self):
@@ -49,6 +51,7 @@ class EmailProcessor:
                 try:
                     # 应用规则引擎，得到匹配结果
                     match_result = self.email_client.process_email(email_id)
+                    self.logger.debug(f"匹配结果: {match_result}")
                     
                     # 检查是否有匹配结果
                     if not match_result:
@@ -63,9 +66,21 @@ class EmailProcessor:
                     # 根据匹配结果，处理附件
                     category = match_result.get('category')
                     if category == '封装送货单' and attachments:
-                        result = self.delivery_handler.process_delivery_excel(match_result)
+                        result = self.excel_handler.process_excel(match_result)
                         stats['processed'] += 1
                         self.logger.debug(f"处理结果: {result}")
+                        continue
+                    
+                    if category == '进度表' and attachments:
+                        result = self.excel_handler.process_excel(match_result)
+                        if result is None:
+                            stats['failed'] += 1
+                            self.logger.debug("该进度表内容可能为空或格式错误，跳过处理")
+                            continue
+                        stats['processed'] += 1
+                        self.logger.debug(f"处理结果: {result}")
+                        self.wip_fab_bll.update_supplier_progress(result.to_dict(orient="records"))
+                        continue
 
                     # TODO: 处理其他规则 封装进度表\fab进度表\测试报告\
                         

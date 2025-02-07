@@ -245,7 +245,7 @@ rules:
 
   - name: 进度表-上华FAB1   
     category: "进度表"
-    supplier: "上华"   
+    supplier: "上华FAB1"   
     conditions:   
       from:   
         - crm_wip_zy@csmc.crmicro.com
@@ -263,7 +263,7 @@ rules:
 
   - name: 进度表-上华FAB2   
     category: "进度表"
-    supplier: "上华"   
+    supplier: "上华FAB2"   
     conditions:   
       from:   
         - crm_wip_zy@csmc.crmicro.com

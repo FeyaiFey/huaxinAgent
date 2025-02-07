@@ -33,17 +33,17 @@ class Scheduler:
         """设置定时任务"""
         # 获取功能开关配置
         email_config = self.config['features']['email_processor']
-        crawler_config = self.crawler_config['crawler']
+        crawler_enabled = self.config['features']['crawler']['enabled']
             
         # 设置爬虫任务
-        if crawler_config['enabled']:
+        if crawler_enabled and self.crawler_config['crawler']['enabled']:
             # 如果配置了启动时执行，则先执行一次爬虫任务
-            if crawler_config.get('run_on_start', True):
+            if self.crawler_config['crawler']['schedule'].get('run_on_start', True):
                 self.logger.debug("系统启动，执行首次爬虫任务...")
                 self._run_crawler_processor()
             
             # 解析时间
-            hour, minute = crawler_config['schedule']['run_time'].split(':')
+            hour, minute = self.crawler_config['crawler']['schedule']['run_time'].split(':')
             # 设置定时任务
             self.scheduler.add_job(
                 func=self._run_crawler_processor,
@@ -56,8 +56,10 @@ class Scheduler:
                 replace_existing=True
             )
             self.logger.debug(
-                f"爬虫任务已设置，执行时间：{crawler_config['schedule']['run_time']}"
+                f"爬虫任务已设置，执行时间：{self.crawler_config['crawler']['schedule']['run_time']}"
             )
+        else:
+            self.logger.info("爬虫功能已禁用")
         
         # 设置邮件处理任务
         if email_config['enabled']:

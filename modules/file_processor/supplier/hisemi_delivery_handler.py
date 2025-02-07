@@ -7,7 +7,9 @@ import os
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 from openpyxl import load_workbook
+
 from .base_delivery_handler import BaseDeliveryExcelHandler
+from utils.logger import Logger
 
 class HisemiHandler(BaseDeliveryExcelHandler):
     """
@@ -22,6 +24,8 @@ class HisemiHandler(BaseDeliveryExcelHandler):
     6. 将数据保存到JSON文件
     7. 将Excel文件移动到归档目录
     """
+    def __init__(self):
+        self.logger = Logger(__name__)
     
     def process(self, match_result: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """

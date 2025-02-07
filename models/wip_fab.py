@@ -24,7 +24,7 @@ class WipFab(BaseModel):
     remainLayer = Column(Integer, nullable=True, comment='剩余层数')
     
     # 位置和时间
-    currentPisition = Column(String(255), nullable=True, comment='当前位置')
+    currentPosition = Column(Integer, nullable=True, comment='当前位置')
     forecastDate = Column(Date, nullable=True, comment='预计完成日期')
     finished_at = Column(DateTime, nullable=True, comment='完工日期')
     
@@ -63,7 +63,7 @@ class WipFab(BaseModel):
             'stage': self.stage,
             'layerCount': self.layerCount,
             'remainLayer': self.remainLayer,
-            'currentPisition': self.currentPisition,
+            'currentPosition': self.currentPosition,
             'forecastDate': self.forecastDate.isoformat() if self.forecastDate else None,
             'supplier': self.supplier,
             'finished_at': self.finished_at.isoformat() if self.finished_at else None,

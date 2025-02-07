@@ -155,7 +155,7 @@ class WipFabDAL(BaseDAL[WipFab]):
         """
         update_data = {'remainLayer': remain_layer}
         if current_position is not None:
-            update_data['currentPisition'] = current_position
+            update_data['currentPosition'] = current_position
         return self.update(session, lot, **update_data)
     
     def batch_update_supplier_data(
@@ -177,10 +177,18 @@ class WipFabDAL(BaseDAL[WipFab]):
             'completed': 0
         }
         
-        # 获取所有现有记录的lot
+        if not supplier_data:
+            return stats
+            
+        # 获取当前数据的供应商
+        current_supplier = supplier_data[0].get('supplier')
+        if not current_supplier:
+            return stats
+            
+        # 获取所有该供应商的现有记录
         existing_lots = {
             record.lot: record 
-            for record in session.query(WipFab).all()
+            for record in session.query(WipFab).filter(WipFab.supplier == current_supplier).all()
         }
         
         # 新数据的lot集合

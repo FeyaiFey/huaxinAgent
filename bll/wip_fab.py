@@ -189,7 +189,7 @@ class WipFabBLL(BaseBLL[WipFab]):
                 'stage': item.get('stage'),
                 'layerCount': int(item['layerCount']) if item.get('layerCount') and pd.notna(item['layerCount']) else None,
                 'remainLayer': int(item['remainLayer']) if item.get('remainLayer') and pd.notna(item['remainLayer']) else None,
-                'currentPisition': item.get('currentPisition') if item.get('currentPisition') and pd.notna(item.get('currentPisition')) else None,
+                'currentPosition': item.get('currentPosition') if item.get('currentPosition') and pd.notna(item.get('currentPosition')) else None,
                 'forecastDate': (
                     datetime.strptime(item['forecastDate'], '%Y-%m-%d').date()
                     if isinstance(item['forecastDate'], str)
