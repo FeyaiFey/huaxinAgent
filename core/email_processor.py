@@ -9,6 +9,7 @@ from utils.logger import Logger
 from infrastructure.email_client import EmailClient
 from modules.file_processor.excel_handler import ExcelHandler
 from bll.wip_fab import WipFabBLL
+from bll.wip_assy import WipAssyBLL
 # from modules.erp_integration.adapter import ERPAdapter
 
 class EmailProcessor:
@@ -20,6 +21,7 @@ class EmailProcessor:
         self._init_email_client()
         self.excel_handler = ExcelHandler()
         self.wip_fab_bll = WipFabBLL()
+        self.wip_assy_bll = WipAssyBLL()
         # self.erp_adapter = ERPAdapter()
 
     def _init_email_client(self):
@@ -71,14 +73,26 @@ class EmailProcessor:
                         self.logger.debug(f"处理结果: {result}")
                         continue
                     
-                    if category == '进度表' and attachments:
+                    if category == '封装进度表' and attachments:
                         result = self.excel_handler.process_excel(match_result)
                         if result is None:
                             stats['failed'] += 1
-                            self.logger.debug("该进度表内容可能为空或格式错误，跳过处理")
+                            self.logger.debug("该封装进度表内容可能为空或格式错误，跳过处理")
                             continue
                         stats['processed'] += 1
                         self.logger.debug(f"处理结果: {result}")
+                        self.wip_assy_bll.update_supplier_progress(result.to_dict(orient="records"))
+                        continue
+
+                    if category == '晶圆进度表' and attachments:
+                        result = self.excel_handler.process_excel(match_result)
+                        if result is None:
+                            stats['failed'] += 1
+                            self.logger.debug("该晶圆进度表内容可能为空或格式错误，跳过处理")
+                            continue
+                        stats['processed'] += 1
+                        self.logger.debug(f"处理结果: {result}")
+
                         self.wip_fab_bll.update_supplier_progress(result.to_dict(orient="records"))
                         continue
 

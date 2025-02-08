@@ -25,11 +25,11 @@ def check_table_structure():
                     IS_NULLABLE,
                     COLUMN_DEFAULT
                 FROM INFORMATION_SCHEMA.COLUMNS
-                WHERE TABLE_NAME = 'huaxinAdmin_wip_fab'
+                WHERE TABLE_NAME = 'huaxinAdmin_wip_assy'
                 ORDER BY ORDINAL_POSITION
             """)).fetchall()
             
-            logger.info("huaxinAdmin_wip_fab 表结构:")
+            logger.info("huaxinAdmin_wip_assy 表结构:")
             for col in columns:
                 col_type = f"{col[1]}"
                 if col[2]:  # 如果有长度

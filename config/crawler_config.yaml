@@ -19,7 +19,7 @@ crawler:
       username: ${HJTC_USERNAME}
       password: ${HJTC_PASSWORD}
       # 输出目录
-      output_dir: "attachments/temp/进度表/和舰科技"
+      output_dir: "attachments/temp/晶圆进度表/和舰科技"
 
     # 江苏芯丰爬虫配置
     xinf:
@@ -28,4 +28,4 @@ crawler:
       password: ${XINF_PASSWORD}
       remember_me: true
       # 输出目录
-      output_dir: "attachments/temp/进度表/江苏芯丰"
+      output_dir: "attachments/temp/封装进度表/江苏芯丰"

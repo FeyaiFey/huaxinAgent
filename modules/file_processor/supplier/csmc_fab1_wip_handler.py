@@ -65,7 +65,6 @@ class CsmcFAB1Handler(BaseDeliveryExcelHandler):
                 raise
             
             df = df[name_values]
-            df.rename(columns=names, inplace=True)
             # 创建反向映射字典
             reverse_names = {v: k for k, v in names.items()}
             # 重命名列

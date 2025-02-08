@@ -8,12 +8,13 @@ from utils.logger import Logger
 
 class HisemiWipHandler(BaseDeliveryExcelHandler):
     """
-    上华FAB2Excel处理器
+    池州华宇WIP处理器
     """
     def __init__(self):
         fields_config = load_yaml("config/wip_fields.yaml")
         self.config = fields_config["wip_fields"]["封装厂"]["池州华宇"]
-        self.craft_forecast = fields_config["wip_fields"]["craft_forecast"]
+        self.craft_forecast = fields_config["wip_fields"]["封装厂"]["craft_forecast"]
+        self.data_format = fields_config["wip_fields"]["封装厂"]["data_format"]
         self.logger = Logger(__name__)
 
     def process(self, match_result: Dict[str, Any]) -> pd.DataFrame:
@@ -36,7 +37,7 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
         """
         try:
             key_columns = self.config["关键字段映射"]
-            data_format = self.craft_forecast.keys()
+            data_format = self.data_format
             names = list(key_columns.keys())
             attachments = match_result.get("attachments")
             if not attachments:
@@ -60,24 +61,62 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
                     
             except ValueError as e:
                 if "No sheet named" in str(e):
-                    self.logger.error("Excel文件中没有名为'wip'的工作表")
+                    self.logger.error("Excel文件中没有名为'Sheet1'的工作表")
                     return None
                 raise
 
             df = df[names]
-            # 创建映射字典
+            
+            # 创建映射字典并重命名列
             mapping_dict = {k: v for k, v in key_columns.items()}
-            # 重命名列
             df.rename(columns=mapping_dict, inplace=True)
+
+            # 将数值列转换为数值类型
+            numerical_columns = list(self.craft_forecast.keys())
+            df[numerical_columns] = df[numerical_columns].apply(pd.to_numeric, errors='coerce').fillna(0)
+
+            # 确保订单号列为字符串类型
+            df["订单号"] = df["订单号"].fillna('').astype(str)
+
+            # 从后往前遍历numerical_columns，找到第一个值大于0的列名
+            df["当前工序"] = df[numerical_columns[::-1]].apply(
+                lambda row: next(
+                    (col for col in numerical_columns[::-1] if row[col] > 0),
+                    None
+                ),
+                axis=1
+            )
+
+            # 根据当前工序，计算预计完成时间
+            df["预计交期"] = df["当前工序"].apply(
+                lambda x: (pd.Timestamp.now() + pd.Timedelta(days=self.craft_forecast.get(x, 0))).date() if x else None
+            )
+
+            # 计算预计数量
+            tomorrow_columns = [k for k, v in self.craft_forecast.items() if v <= 1]
+            three_days_columns = [k for k, v in self.craft_forecast.items() if v <= 3]
+            seven_days_columns = [k for k, v in self.craft_forecast.items() if v <= 7]
+
+            df["次日预计"] = df[tomorrow_columns].sum(axis=1, min_count=1)
+            df["三日预计"] = df[three_days_columns].sum(axis=1, min_count=1)
+            df["七日预计"] = df[seven_days_columns].sum(axis=1, min_count=1)
+
+            # 添加供应商信息和完成时间
+            df["封装厂"] = "池州华宇"
+            df["finished_at"] = pd.NaT
+
+            # 过滤掉订单号为空的记录
+            df = df[df["订单号"].str.strip() != ""]
 
             df = df[data_format]
 
+            # print(df)
 
+            self.logger.debug(df)
+            self.logger.debug(f"成功处理池州华宇Excel文件")
 
+            return df
 
-
-
-        
         except Exception as e:
             self.logger.error(f"处理Excel文件时发生错误: {e}")
             return None

@@ -43,7 +43,7 @@ rules:
       subject_contains:   
         - 华芯微
         - 出货单
-      subject_regex: "华芯微\\d+月份出货单\\(\\d+\\)"   
+      subject_regex: "华芯微\\d+月份出货单(\\(\\d+\\))?"   
     actions:   
       save_attachment: true   
       mark_as_read: true   
@@ -187,8 +187,8 @@ rules:
       - .zip
     enabled: true
 
-  - name: 进度表-池州华宇   
-    category: "进度表"
+  - name: 封装进度表-池州华宇   
+    category: "封装进度表"
     supplier: "池州华宇"   
     conditions:   
       from:   
@@ -204,14 +204,14 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/进度表/池州华宇"   
+      attachment_folder: "attachments/temp/封装进度表/池州华宇"   
     allowed_extensions:    
       - .xlsx
       - .xls
     enabled: true
 
-  - name: 进度表-无锡华润安盛   
-    category: "进度表"
+  - name: 封装进度表-无锡华润安盛   
+    category: "封装进度表"
     supplier: "无锡华润安盛"   
     conditions:   
       from:   
@@ -228,14 +228,14 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/进度表/无锡华润安盛"   
+      attachment_folder: "attachments/temp/封装进度表/无锡华润安盛"   
     allowed_extensions:    
       - .xlsx
       - .xls
     enabled: true
 
-  - name: 进度表-山东汉旗   
-    category: "进度表"
+  - name: 封装进度表-山东汉旗   
+    category: "封装进度表"
     supplier: "山东汉旗"   
     conditions:   
       from:   
@@ -251,14 +251,14 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/进度表/山东汉旗"   
+      attachment_folder: "attachments/temp/封装进度表/山东汉旗"   
     allowed_extensions:    
       - .xlsx
       - .xls
     enabled: true
 
-  - name: 进度表-力积电   
-    category: "进度表"
+  - name: 晶圆进度表-力积电   
+    category: "晶圆进度表"
     supplier: "力积电"   
     conditions:   
       from:   
@@ -275,15 +275,15 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/进度表/力积电"   
+      attachment_folder: "attachments/temp/晶圆进度表/力积电"   
     allowed_extensions:    
       - .xlsx
       - .xls
       - .csv
     enabled: true   
 
-  - name: 进度表-上华FAB1   
-    category: "进度表"
+  - name: 晶圆进度表-上华FAB1   
+    category: "晶圆进度表"
     supplier: "上华FAB1"   
     conditions:   
       from:   
@@ -297,14 +297,14 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/进度表/上华FAB1"   
+      attachment_folder: "attachments/temp/晶圆进度表/上华FAB1"   
     allowed_extensions:    
       - .xlsx
       - .xls
     enabled: true
 
-  - name: 进度表-上华FAB2   
-    category: "进度表"
+  - name: 晶圆进度表-上华FAB2   
+    category: "晶圆进度表"
     supplier: "上华FAB2"   
     conditions:   
       from:   
@@ -318,7 +318,7 @@ rules:
     actions:   
       save_attachment: true   
       mark_as_read: true   
-      attachment_folder: "attachments/temp/进度表/上华FAB2"   
+      attachment_folder: "attachments/temp/晶圆进度表/上华FAB2"   
     allowed_extensions:    
       - .xlsx
       - .xls

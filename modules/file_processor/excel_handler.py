@@ -8,6 +8,7 @@ from .supplier.psmc_wip_handler import PsmcHandler
 from .supplier.csmc_fab1_wip_handler import CsmcFAB1Handler
 from .supplier.csmc_fab2_wip_handler import CsmcFAB2Handler
 from .supplier.rsmc_wip_handler import RsmcHandler
+from .supplier.hisemi_wip_handler import HisemiWipHandler
 from .supplier.utils import SupplierUtils
 
 class ExcelHandler:
@@ -19,12 +20,13 @@ class ExcelHandler:
     # 供应商处理器映射
     SUPPLIER_HANDLERS = {
         '封装送货单_池州华宇': HisemiDeliveryHandler,
+        '封装进度表_池州华宇': HisemiWipHandler,
         '封装送货单_山东汉旗': HanQiDeliveryHandler,
         '封装送货单_江苏芯丰': XinFengDeliveryHandler,
-        '进度表_荣芯': RsmcHandler,
-        '进度表_上华FAB1': CsmcFAB1Handler,
-        '进度表_上华FAB2': CsmcFAB2Handler,
-        '进度表_力积电': PsmcHandler,
+        '晶圆进度表_荣芯': RsmcHandler,
+        '晶圆进度表_上华FAB1': CsmcFAB1Handler,
+        '晶圆进度表_上华FAB2': CsmcFAB2Handler,
+        '晶圆进度表_力积电': PsmcHandler,
         # 可以继续添加其他供应商
     }
     
@@ -83,7 +85,7 @@ class ExcelHandler:
                     self.logger.error(f"添加到工作进程失败: {str(e)}")
                     return None
                 
-            elif match_result.get('category') == '进度表':
+            elif match_result.get('category') in ['封装进度表', '晶圆进度表']:
                 self.logger.debug(f"开始处理供应商[{supplier}]的进度表")
                 result = handler.process(match_result)
                 return result

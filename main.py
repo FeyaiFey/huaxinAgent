@@ -30,7 +30,7 @@ class HuaxinAgent:
             env_path = Path('.env')
             if env_path.exists():
                 load_dotenv(env_path)
-                # self.logger.info("环境变量加载成功")
+                self.logger.debug("环境变量加载成功")
             else:
                 self.logger.warning("未找到.env文件，请确保环境变量已正确设置")
             

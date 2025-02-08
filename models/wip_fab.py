@@ -26,7 +26,7 @@ class WipFab(BaseModel):
     # 位置和时间
     currentPosition = Column(Integer, nullable=True, comment='当前位置')
     forecastDate = Column(Date, nullable=True, comment='预计完成日期')
-    finished_at = Column(DateTime, nullable=True, comment='完工日期')
+    finished_at = Column(Date, nullable=True, comment='完工日期')
     
     def __repr__(self):
         """返回模型的字符串表示"""
