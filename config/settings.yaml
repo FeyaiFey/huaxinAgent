@@ -3,17 +3,17 @@ database:
   driver: 'ODBC Driver 18 for SQL Server'
   server: '192.168.200.21'
   database: 'E10'
-  auth_type: 'sql'  # windows 或 sql
+  auth_type: 'windows'  # windows 或 sql
   echo: false  # 是否打印SQL语句
 
 # 功能开关
 features:
   email_processor:
     enabled: true
-    check_interval: 600  # 检查邮件间隔（秒）
+    check_interval: 60  # 检查邮件间隔（秒）
     run_on_start: true   # 启动时是否立即执行
   crawler:
-    enabled: false
+    enabled: true
     schedule_time: '08:00'
     run_on_start: true   # 启动时是否立即执行
 

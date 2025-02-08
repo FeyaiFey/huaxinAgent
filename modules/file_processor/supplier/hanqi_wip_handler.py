@@ -46,7 +46,7 @@ class HanqiWipHandler(BaseDeliveryExcelHandler):
             
             # 读取Excel文件
             try:
-                df = pd.read_excel(attachments[0], header=0, sheet_name="Sheet1")
+                df = pd.read_excel(attachments[0], header=0)
                 
                 # 检查DataFrame是否为空
                 if df.empty:
@@ -54,6 +54,7 @@ class HanqiWipHandler(BaseDeliveryExcelHandler):
                     return None
                     
                 # 检查是否包含所需的列
+                df.columns = df.columns.str.strip()
                 missing_columns = set(names) - set(df.columns)
                 if missing_columns:
                     self.logger.error(f"Excel文件缺少必要的列: {missing_columns}")
@@ -65,48 +66,89 @@ class HanqiWipHandler(BaseDeliveryExcelHandler):
                     return None
                 raise
 
+            # 清理列名中的空格
+            df.columns = df.columns.str.strip()
+
             df = df[names]
+
+            key_columns = {k.strip(): v for k, v in key_columns.items()}
             
             # 创建映射字典并重命名列
             mapping_dict = {k: v for k, v in key_columns.items()}
             df.rename(columns=mapping_dict, inplace=True)
 
-            # 将数值列转换为数值类型
-            numerical_columns = list(self.craft_forecast.keys())
-            df[numerical_columns] = df[numerical_columns].apply(pd.to_numeric, errors='coerce').fillna(0)
+            # 整理数据
+            marking_columns = ["Mar_king打印", "打印前烘烤"]
+            # 只对存在的列进行求和
+            existing_marking_columns = [col for col in marking_columns if col in df.columns]
+            if existing_marking_columns:
+                df[existing_marking_columns] = df[existing_marking_columns].apply(pd.to_numeric, errors='coerce').fillna(0)
+                df["打印"] = df[existing_marking_columns].sum(axis=1, min_count=1)
+            else:
+                df["打印"] = 0
 
-            # 确保订单号列为字符串类型
-            df["订单号"] = df["订单号"].fillna('').astype(str)
+            test_columns = ["测试打印", "测试编带", "测试管装", "编带"]
+            # 只对存在的列进行求和
+            existing_test_columns = [col for col in test_columns if col in df.columns]
+            if existing_test_columns:
+                df[existing_test_columns] = df[existing_test_columns].apply(pd.to_numeric, errors='coerce').fillna(0)
+                df["测编打印"] = df[existing_test_columns].sum(axis=1, min_count=1)
+            else:
+                df["测编打印"] = 0
+
+
+            df[["研磨","切割","待装片","等离子清洗1","三目检","等离子清洗2","回流焊","后切割","外观检","待入库"]] = 0
+
+            df["扣留信息"] = pd.NaT
+
+
+
+            numerical_columns = list(self.craft_forecast.keys())
+            # 只处理存在的数值列
+            existing_numerical_columns = [col for col in numerical_columns if col in df.columns]
+            df[existing_numerical_columns] = df[existing_numerical_columns].apply(pd.to_numeric, errors='coerce').fillna(0)
+
+            df[["在线合计","仓库库存"]] = df[["在线合计","仓库库存"]].apply(pd.to_numeric, errors='coerce').fillna(0)
 
             # 从后往前遍历numerical_columns，找到第一个值大于0的列名
-            df["当前工序"] = df[numerical_columns[::-1]].apply(
+            df["当前工序"] = df[existing_numerical_columns[::-1]].apply(
                 lambda row: next(
-                    (col for col in numerical_columns[::-1] if row[col] > 0),
-                    None
+                    (col for col in existing_numerical_columns[::-1] if row[col] > 0),
+                    "研磨"
                 ),
                 axis=1
             )
 
-            # 根据当前工序，计算预计完成时间
+            # 根据当前工序，计算预计完成时间 汉旗要加快递2天
             df["预计交期"] = df["当前工序"].apply(
-                lambda x: (pd.Timestamp.now() + pd.Timedelta(days=self.craft_forecast.get(x, 0))).date() if x else None
+                lambda x: pd.Timestamp.now().date() + pd.Timedelta(days=self.craft_forecast.get(x, 0) + 2) if x else pd.NaT
             )
 
-            # 计算预计数量
+            # 如果除了研磨,切割,待装片,其他工序的和都为0,则预计交期为空
+            exclude_process = ["研磨", "切割", "待装片"]
+            process_columns = [col for col, days in self.craft_forecast.items() if col not in exclude_process]
+            # 只对存在的工序列进行求和
+            existing_process_columns = [col for col in process_columns if col in df.columns]
+            if existing_process_columns:
+                other_process_mask = df[existing_process_columns].sum(axis=1) == 0
+                df.loc[other_process_mask, "预计交期"] = pd.NaT
+            
+            # 计算不同时间段的预计产出
             tomorrow_columns = [k for k, v in self.craft_forecast.items() if v <= 1]
             three_days_columns = [k for k, v in self.craft_forecast.items() if v <= 3]
             seven_days_columns = [k for k, v in self.craft_forecast.items() if v <= 7]
 
-            df["次日预计"] = df[tomorrow_columns].sum(axis=1, min_count=1)
-            df["三日预计"] = df[three_days_columns].sum(axis=1, min_count=1)
-            df["七日预计"] = df[seven_days_columns].sum(axis=1, min_count=1)
+            # 只对存在的列进行求和
+            existing_tomorrow_columns = [col for col in tomorrow_columns if col in df.columns]
+            existing_three_days_columns = [col for col in three_days_columns if col in df.columns]
+            existing_seven_days_columns = [col for col in seven_days_columns if col in df.columns]
 
-            # 添加供应商信息和完成时间
-            df["封装厂"] = "池州华宇"
+            df["次日预计"] = df[existing_tomorrow_columns].sum(axis=1, min_count=1) if existing_tomorrow_columns else 0
+            df["三日预计"] = df[existing_three_days_columns].sum(axis=1, min_count=1) if existing_three_days_columns else 0
+            df["七日预计"] = df[existing_seven_days_columns].sum(axis=1, min_count=1) if existing_seven_days_columns else 0
+
+            df["封装厂"] = "山东汉旗"
             df["finished_at"] = pd.NaT
-
-            # 过滤掉订单号为空的记录
-            df = df[df["订单号"].str.strip() != ""]
 
             df = df[data_format]
 

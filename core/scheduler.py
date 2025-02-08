@@ -26,7 +26,7 @@ class Scheduler:
         self.crawler_config = load_yaml('config/crawler_config.yaml')
         self.scheduler = BackgroundScheduler()
         self.crawler_processor = CrawlerProcessor()
-        self.email_processor = EmailProcessor()
+        self.email_processor = None  # 初始化时不创建EmailProcessor实例
         self._setup_jobs()
         
     def _setup_jobs(self):
@@ -86,11 +86,17 @@ class Scheduler:
         """运行邮件处理器"""
         try:
             self.logger.info("开始执行邮件处理任务...")
+            # 每次运行时创建新的EmailProcessor实例
+            self.email_processor = EmailProcessor()
             stats = self.email_processor.process_unread_emails()
             self.logger.debug(f"邮件处理任务完成: {stats}")
             
         except Exception as e:
             self.logger.error(f"邮件处理任务失败: {str(e)}", exc_info=True)
+        finally:
+            # 任务完成后清理资源
+            if self.email_processor:
+                self.email_processor = None
             
     def _run_crawler_processor(self):
         """运行爬虫处理器"""

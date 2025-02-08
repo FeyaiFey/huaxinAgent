@@ -92,6 +92,12 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
                 lambda x: (pd.Timestamp.now() + pd.Timedelta(days=self.craft_forecast.get(x, 0))).date() if x else None
             )
 
+            # 如果除了研磨,切割,待装片,其他工序的和都为0,则预计交期为空
+            exclude_process = ["研磨", "切割", "待装片"]
+            process_columns = [col for col, days in self.craft_forecast.items() if col not in exclude_process]
+            other_process_mask = df[process_columns].sum(axis=1) == 0
+            df.loc[other_process_mask, "预计交期"] = pd.NaT
+
             # 计算预计数量
             tomorrow_columns = [k for k, v in self.craft_forecast.items() if v <= 1]
             three_days_columns = [k for k, v in self.craft_forecast.items() if v <= 3]

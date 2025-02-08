@@ -9,6 +9,7 @@ from .supplier.csmc_fab1_wip_handler import CsmcFAB1Handler
 from .supplier.csmc_fab2_wip_handler import CsmcFAB2Handler
 from .supplier.rsmc_wip_handler import RsmcHandler
 from .supplier.hisemi_wip_handler import HisemiWipHandler
+from .supplier.hanqi_wip_handler import HanqiWipHandler
 from .supplier.utils import SupplierUtils
 
 class ExcelHandler:
@@ -22,6 +23,7 @@ class ExcelHandler:
         '封装送货单_池州华宇': HisemiDeliveryHandler,
         '封装进度表_池州华宇': HisemiWipHandler,
         '封装送货单_山东汉旗': HanQiDeliveryHandler,
+        '封装进度表_山东汉旗': HanqiWipHandler,
         '封装送货单_江苏芯丰': XinFengDeliveryHandler,
         '晶圆进度表_荣芯': RsmcHandler,
         '晶圆进度表_上华FAB1': CsmcFAB1Handler,
