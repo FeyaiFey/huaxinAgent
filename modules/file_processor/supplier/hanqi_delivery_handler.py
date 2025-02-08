@@ -173,9 +173,9 @@ class HanQiDeliveryHandler(BaseDeliveryExcelHandler):
                     data_list = []
                     
                     # 从第7行开始读取数据 (索引从0开始，所以是6)
-                    for row in range(7, sheet.nrows):
+                    for row in range(6, sheet.nrows):
                         # 检查是否到达表格末尾（Total行）
-                        if 'Total' in str(sheet.cell_value(row, 7)):  # H列对应索引7
+                        if 'Total' in str(sheet.cell_value(row, 7)) or not sheet.cell_value(row, 7):  # H列对应索引7
                             break
                         # 跳过空行
                         if not sheet.cell_value(row, 4):  # E列对应索引4

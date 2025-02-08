@@ -8,15 +8,15 @@ rules:
         - "*@hisemi.com.cn"    # 通配符匹配任何来自该域名的邮件
       to:    # 收件人匹配列表
         - wxb1@h-sun.com
+        - fanlm@h-sun.com
+        - wanghq@h-sun.com
         - "*@h-sun.com"
       cc:    # 抄送人匹配列表，支持通配符 *
-        - fanlm@h-sun.com    # 精确匹配
-        - cangk2@h-sun.com   # 精确匹配
-        - "*@h-sun.com"    # 通配符匹配任何来自该域名的邮件
+        - yppeter@hisemi.com.cn    # 精确匹配
+        - "*@hisemi.com.cn"    # 通配符匹配任何来自该域名的邮件
       subject_contains:    # 主题包含关键词列表（任一关键词匹配即可）
-        - 苏州华芯封装产品送货单
         - 封装产品送货单
-      subject_regex: "苏州华芯封装产品送货单\\d+\\.\\d+"    # 主题正则表达式（匹配送货单编号格式）
+      subject_regex: "\\d*华芯封装产品送货单\\d+\\.\\d+"    # 主题正则表达式（匹配送货单编号格式，前面的数字可选）
     actions:    # 匹配后的处理动作
       save_attachment: true    # 是否保存附件
       mark_as_read: true    # 是否标记为已读
