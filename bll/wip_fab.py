@@ -1,12 +1,14 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from datetime import date, datetime, timedelta
+import pandas as pd
+
 from utils.logger import Logger
 from infrastructure.database import DatabaseSession
 from dal.wip_fab import WipFabDAL
 from models.wip_fab import WipFab
 from utils.cache import cache_5min, cache_1hour, TimedCache
 from .base import BaseBLL
-import pandas as pd
+from models.validators.wip_validator import WipDataValidator, DataCleaner
 
 
 class WipFabBLL(BaseBLL[WipFab]):
@@ -16,9 +18,40 @@ class WipFabBLL(BaseBLL[WipFab]):
         """初始化"""
         super().__init__(WipFabDAL)
         self.logger = Logger(__name__)
+        self.validator = WipDataValidator()
+        self.cleaner = DataCleaner()
         # 创建实例级别的缓存
         self._summary_cache = TimedCache(seconds=300)  # 5分钟缓存
         self._forecast_cache = TimedCache(seconds=3600)  # 1小时缓存
+
+    def process_wip_data(
+        self, 
+        data: List[Dict[str, Any]]
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """
+        处理WIP数据
+        返回: (有效数据列表, 无效数据列表)
+        """
+        valid_data = []
+        invalid_data = []
+        
+        for item in data:
+            # 数据清洗
+            cleaned_item = self.cleaner.clean(item)
+            
+            # 数据验证
+            if self.validator.validate(cleaned_item):
+                valid_data.append(cleaned_item)
+            else:
+                invalid_data.append({
+                    'data': item,
+                    'errors': [
+                        {'field': err.field, 'message': err.message, 'value': err.value}
+                        for err in self.validator.get_errors()
+                    ]
+                })
+        
+        return valid_data, invalid_data
         
 
     def update_supplier_progress(self, supplier_data: List[Dict[str, Any]]) -> Dict[str, int]:
