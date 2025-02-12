@@ -49,8 +49,10 @@ class WipFab(BaseModel):
         """标记为已完成"""
         self.status = "已完结"
         self.remainLayer = 0
-        self.forecastDate = completion_date or date.today()
+        self.forecastDate = None
         self.finished_at = datetime.now()
+        self.currentPosition = None
+        self.stage = None
     
     def to_dict(self):
         """转换为字典格式"""

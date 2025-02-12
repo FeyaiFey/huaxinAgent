@@ -3,7 +3,7 @@ database:
   driver: 'ODBC Driver 18 for SQL Server'
   server: '192.168.200.21'
   database: 'E10'
-  auth_type: 'windows'  # windows 或 sql
+  auth_type: 'sql'  # windows 或 sql
   echo: false  # 是否打印SQL语句
 
 # 功能开关

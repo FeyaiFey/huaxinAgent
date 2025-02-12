@@ -61,6 +61,34 @@ class WipAssy(BaseModel):
     def mark_as_completed(self, completion_date: date = None):
         """标记为已完成"""
         self.finished_at = completion_date or date.today()
+        self.当前工序 = '已完成'
+        self.预计交期 = None
+        self.次日预计 = None
+        self.三日预计 = None
+        self.七日预计 = None
+        self.仓库库存 = None
+        self.扣留信息 = None
+        self.在线合计 = None
+        self.研磨 = None
+        self.切割 = None
+        self.待装片 = None
+        self.装片 = None
+        self.银胶固化 = None
+        self.等离子清洗1 = None
+        self.键合 = None
+        self.三目检 = None
+        self.等离子清洗2 = None
+        self.塑封 = None
+        self.后固化 = None
+        self.回流焊 = None
+        self.电镀 = None
+        self.打印 = None
+        self.后切割 = None
+        self.切筋成型 = None
+        self.测编打印 = None
+        self.外观检 = None
+        self.包装 = None
+        self.待入库 = None
     
     def to_dict(self):
         """转换为字典格式"""
