@@ -101,7 +101,7 @@ class EmailHelper:
     
     def fetch_email(self, email_id: bytes) -> message.Message:
         """获取邮件内容"""
-        _, msg_data = self.imap.fetch(email_id, '(BODY.PEEK[])')
+        _, msg_data = self.imap.fetch(email_id, '(BODY.PEEK[])')  # '(BODY.PEEK[HEADER])'
         email_body = msg_data[0][1]
         return email.message_from_bytes(email_body)
     

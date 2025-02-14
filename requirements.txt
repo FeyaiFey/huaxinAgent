@@ -16,8 +16,14 @@ openpyxl==3.1.2
 xlrd==2.0.1
 
 # 自动化
-pyautogui==0.9.54
-opencv-python==4.8.1.78
+PyAutoGUI==0.9.54
+opencv-python==4.10.0.84
+pillow==10.4.0
+PyGetWindow==0.0.9
+pyperclip==1.9.0
+pywin32==306
+keyboard==0.13.5
+
 
 # 爬虫
 requests==2.31.0

@@ -10,7 +10,7 @@ from infrastructure.email_client import EmailClient
 from modules.file_processor.excel_handler import ExcelHandler
 from bll.wip_fab import WipFabBLL
 from bll.wip_assy import WipAssyBLL
-# from modules.erp_integration.adapter import ERPAdapter
+from modules.erp_integration.workflows.receipt import ReceiptErp
 
 class EmailProcessor:
     """邮件处理器核心类"""
@@ -22,7 +22,6 @@ class EmailProcessor:
         self.excel_handler = ExcelHandler()
         self.wip_fab_bll = WipFabBLL()
         self.wip_assy_bll = WipAssyBLL()
-        # self.erp_adapter = ERPAdapter()
 
     def _init_email_client(self):
         """初始化邮件客户端"""
@@ -71,6 +70,26 @@ class EmailProcessor:
                         result = self.excel_handler.process_excel(match_result)
                         stats['processed'] += 1
                         self.logger.debug(f"处理结果: {result}")
+                        try:
+                            receipt_handler = ReceiptErp()
+                            # 从result中提取必要的数据
+                            # result是一个字典，key是日期，value是该日期的送货单数据列表
+                            for delivery_date, delivery_items in result.items():
+                                supplier = match_result.get('supplier')
+                                success = receipt_handler.process_delivery_data(
+                                    date=delivery_date,
+                                    supplier=supplier,
+                                    data=delivery_items
+                                )
+                                if success:
+                                    self.logger.info(f"{supplier}送货单数据录入E10成功！")
+                                else:
+                                    self.logger.error(f"{supplier}送货单数据录入E10失败：返回值为False")
+                                    stats['failed'] += 1
+                                    break
+                        except Exception as e:
+                            self.logger.error(f"{match_result.get('supplier')}送货单数据录入E10失败：{str(e)}", exc_info=True)
+                            stats['failed'] += 1
                         continue
                     
                     if category == '封装进度表' and attachments:
