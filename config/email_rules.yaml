@@ -323,3 +323,24 @@ rules:
       - .xlsx
       - .xls
     enabled: true
+
+  - name: 晶圆进度表-荣芯  
+    category: "晶圆进度表"
+    supplier: "荣芯"   
+    conditions:   
+      from:   
+        - wip_report@rongsemi.com
+      to:   
+        - fanlm@h-sun.com
+        - wxb1@h-sun.com
+      subject_contains:
+        - Rongsemi WIP&Stock
+      subject_regex: "Rongsemi WIP&Stock"
+    actions:   
+      save_attachment: true   
+      mark_as_read: true   
+      attachment_folder: "attachments/temp/晶圆进度表/荣芯"   
+    allowed_extensions:    
+      - .xlsx
+      - .xls
+    enabled: true

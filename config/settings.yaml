@@ -13,7 +13,7 @@ features:
     check_interval: 600  # 检查邮件间隔（秒）
     run_on_start: true   # 启动时是否立即执行
   crawler:
-    enabled: false
+    enabled: true
     schedule_time: '08:00'
     run_on_start: true   # 启动时是否立即执行
 

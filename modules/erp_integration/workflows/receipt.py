@@ -150,6 +150,8 @@ class ReceiptErp:
             pyautogui.press('enter')
             time.sleep(1)
             pyautogui.press('enter')
+            time.sleep(1)
+            pyautogui.press('enter')
 
             # 粘贴日期
             pyperclip.copy(date)
@@ -307,7 +309,7 @@ class ReceiptErp:
             time.sleep(2)
             
             self.logger.info(f"{supplier}-{date}送货单处理完成")
-            self.shutdown_system(processor)
+            self.shutdown_system()
             return True
             
         except Exception as e:

@@ -52,11 +52,16 @@ class RsmcHandler(BaseDeliveryExcelHandler):
                 if df.empty:
                     self.logger.error("Excel文件内容为空")
                     return None
-                    
+                
+                # 清理列名中的空格
+                df.columns = df.columns.str.strip()
+                
                 # 检查是否包含所需的列
                 missing_columns = set(name_values) - set(df.columns)
                 if missing_columns:
                     self.logger.error(f"Excel文件缺少必要的列: {missing_columns}")
+                    self.logger.debug(f"现有列: {list(df.columns)}")
+                    self.logger.debug(f"需要的列: {name_values}")
                     return None
                     
             except ValueError as e:
@@ -65,21 +70,39 @@ class RsmcHandler(BaseDeliveryExcelHandler):
                     return None
                 raise
             
-            df = df[name_values]
+            # 只选择需要的列
+            try:
+                df = df[name_values]
+            except KeyError as e:
+                self.logger.error(f"选择列时出错: {str(e)}")
+                self.logger.debug(f"现有列: {list(df.columns)}")
+                self.logger.debug(f"尝试选择的列: {name_values}")
+                return None
+
             # 创建反向映射字典
-            reverse_names = {v: k for k, v in names.items()}
+            reverse_names = {v.strip(): k.strip() for k, v in names.items()}
+            
             # 重命名列
-            df.rename(columns=reverse_names, inplace=True)
+            try:
+                df.rename(columns=reverse_names, inplace=True)
+            except Exception as e:
+                self.logger.error(f"重命名列时出错: {str(e)}")
+                self.logger.debug(f"重命名映射: {reverse_names}")
+                return None
 
             df["supplier"] = "荣芯"
             df["finished_at"] = pd.NaT
 
             # 处理数值型字段，将非数值转换为NaN
-            df["remainLayer"] = pd.to_numeric(df["remainLayer"], errors='coerce')
-            df["layerCount"] = pd.to_numeric(df["layerCount"], errors='coerce')
+            try:
+                df["remainLayer"] = pd.to_numeric(df["remainLayer"], errors='coerce')
+                df["layerCount"] = pd.to_numeric(df["layerCount"], errors='coerce')
+            except Exception as e:
+                self.logger.error(f"转换数值字段时出错: {str(e)}")
+                return None
 
             # 将purchaseOrder为空的数据改为Trail
-            trail_mask = df["purchaseOrder"] == " "
+            trail_mask = df["purchaseOrder"].isna() | (df["purchaseOrder"].str.strip() == "")
             df.loc[trail_mask, "purchaseOrder"] = "Trail"
             df.loc[trail_mask, "itemName"] = "Trail"
 
@@ -92,12 +115,29 @@ class RsmcHandler(BaseDeliveryExcelHandler):
             )
 
             # 安全转换日期
-            df["forecastDate"] = pd.to_datetime(df["forecastDate"], errors='coerce') + pd.Timedelta(days=7)
+            try:
+                df["forecastDate"] = pd.to_datetime(df["forecastDate"], errors='coerce')
+                # 只对非空日期进行偏移计算
+                df["forecastDate"] = df["forecastDate"].apply(
+                    lambda x: (x + pd.Timedelta(days=7)).date() if pd.notna(x) else pd.NaT
+                )
+            except Exception as e:
+                self.logger.error(f"转换日期字段时出错: {str(e)}")
+                return None
 
-            df = df[data_format]
+            # 确保数据格式正确
+            try:
+                df = df[data_format]
+            except KeyError as e:
+                self.logger.error(f"整理最终数据格式时出错: {str(e)}")
+                self.logger.debug(f"现有列: {list(df.columns)}")
+                self.logger.debug(f"需要的列: {data_format}")
+                return None
+
             self.logger.debug(f"成功处理荣芯Excel文件")
             return df
+            
         except Exception as e:
-            self.logger.error(f"处理荣芯Excel文件失败: {e}")
+            self.logger.error(f"处理荣芯Excel文件失败: {str(e)}")
             return None
 
