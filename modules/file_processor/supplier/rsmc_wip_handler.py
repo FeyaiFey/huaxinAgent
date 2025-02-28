@@ -47,6 +47,7 @@ class RsmcHandler(BaseDeliveryExcelHandler):
             # 读取Excel文件
             try:
                 df = pd.read_excel(attachments[0], header=header, sheet_name="WIP Report")
+                df_stock = pd.read_excel(attachments[0], header=0, sheet_name="Stock")
                 
                 # 检查DataFrame是否为空
                 if df.empty:
@@ -113,6 +114,39 @@ class RsmcHandler(BaseDeliveryExcelHandler):
                 else None,
                 axis=1
             )
+
+            # 若Stock表不为空，则处理Stock表
+            field_dict = {"Customer\nDevice":"itemName","Lot ID":"lot","Qty":"qty","Date":"forecastDate"}
+            df_stock.rename(columns=field_dict, inplace=True)
+            df_stock = df_stock[["itemName","lot","qty","forecastDate"]]
+            df_stock["supplier"] = "荣芯"
+            # 先将forecastDate转换为datetime
+            df_stock["forecastDate"] = pd.to_datetime(df_stock["forecastDate"], errors='coerce')
+            # 然后再进行日期偏移
+            df_stock["forecastDate"] = df_stock["forecastDate"].apply(
+                lambda x: (x + pd.Timedelta(days=3)).date() if pd.notna(x) else pd.NaT
+            )
+            df_stock["status"] = "STOCK"
+            
+            # 确保df_stock包含所有必要的列，缺失的列填充空值
+            for col in data_format:
+                if col not in df_stock.columns:
+                    df_stock[col] = None  # 统一使用None作为空值
+            
+            # 处理数值型字段
+            numeric_cols = ["layerCount", "remainLayer", "currentPosition", "qty"]
+            for col in numeric_cols:
+                if col in df_stock.columns:
+                    df_stock[col] = pd.to_numeric(df_stock[col], errors='coerce')
+                    df_stock[col] = df_stock[col].where(df_stock[col].notna(), None)
+            
+            # 合并df和df_stock
+            df = pd.concat([df, df_stock], ignore_index=True)
+            
+            # 确保所有数值列的空值都是None而不是NaN或pd.NA
+            for col in numeric_cols:
+                if col in df.columns:
+                    df[col] = df[col].where(df[col].notna(), None)
 
             # 安全转换日期
             try:

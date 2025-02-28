@@ -208,7 +208,9 @@ class WipFabDAL(BaseDAL[WipFab]):
                 # 更新现有记录
                 record = existing_lots[lot]
                 for key, value in item.items():
-                    setattr(record, key, value)
+                    # 跳过purchaseOrder字段的更新
+                    if key != 'purchaseOrder':
+                        setattr(record, key, value)
                 stats['updated'] += 1
             else:
                 # 创建新记录
