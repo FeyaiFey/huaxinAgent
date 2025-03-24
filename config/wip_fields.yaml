@@ -30,7 +30,7 @@ wip_fields:
       header: 0
       names:
         purchaseOrder: "PO"
-        itemName: "CSMC_PARTNAME" 
+        itemName: "CUST_PARTNAME" 
         lot: "LOT_ID"
         qty: "CURRENT_QTY"
         status: "STATUS"
@@ -42,7 +42,7 @@ wip_fields:
       header: 0
       names:
         purchaseOrder: "PO"
-        itemName: "CSMC_PARTNAME" 
+        itemName: "CUST_PARTNAME" 
         lot: "LOT_ID"
         qty: "CURRENT_QTY"
         status: "STATUS"
@@ -124,7 +124,7 @@ wip_fields:
         Testtu_bassembly测试管装: "测试管装"
         Packing包装: "包装"
         在线合计: "在线合计"
-        入库合计: "仓库库存"
+        库存: "仓库库存"
 
     data_format:
       - 订单号

@@ -161,9 +161,9 @@ class EmailHelper:
             filepath = folder_path.joinpath(filename)
             
             # 检查文件是否已存在
-            if filepath.exists():
-                self.logger.debug(f"附件已存在，跳过下载: {filename}")
-                return filepath
+            # if filepath.exists() :
+            #     self.logger.debug(f"附件已存在，跳过下载: {filename}")
+            #     return filepath
             
             # 保存文件
             with filepath.open('wb') as f:

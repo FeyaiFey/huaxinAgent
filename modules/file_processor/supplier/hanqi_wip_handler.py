@@ -47,6 +47,8 @@ class HanqiWipHandler(BaseDeliveryExcelHandler):
             # 读取Excel文件
             try:
                 df = pd.read_excel(attachments[0], header=0)
+
+                self.logger.debug(df)
                 
                 # 检查DataFrame是否为空
                 if df.empty:
@@ -111,13 +113,15 @@ class HanqiWipHandler(BaseDeliveryExcelHandler):
             df[["在线合计","仓库库存"]] = df[["在线合计","仓库库存"]].apply(pd.to_numeric, errors='coerce').fillna(0)
 
             # 从后往前遍历numerical_columns，找到第一个值大于0的列名
-            df["当前工序"] = df[existing_numerical_columns[::-1]].apply(
-                lambda row: next(
+            df["当前工序"] = df.apply(
+                lambda row: "STOCK" if row["仓库库存"] > 0 else next(
                     (col for col in existing_numerical_columns[::-1] if row[col] > 0),
                     "研磨"
                 ),
                 axis=1
             )
+
+
 
             # 根据当前工序，计算预计完成时间 汉旗要加快递2天
             df["预计交期"] = df["当前工序"].apply(

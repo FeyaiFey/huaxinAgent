@@ -10,6 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, Tuple, Dict, List, Any
 from utils.logger import Logger
+import psutil
 
 
 class AutoGuiProcessor:
@@ -27,7 +28,7 @@ class AutoGuiProcessor:
     MAX_RETRIES = 5          # 最大重试次数
     RETRY_INTERVAL = 1.0     # 重试间隔（秒）
     MATCH_THRESHOLD = 0.8    # 模板匹配阈值
-    SCREENSHOT_DIR = "screenshots"  # 截图保存目录
+    SCREENSHOT_DIR = "logs/screenshots"  # 截图保存目录
     TEMPLATE_DIR = "utils/templates"      # 模板图片目录
     
     # ERP相关常量
@@ -132,6 +133,8 @@ class AutoGuiProcessor:
             str: 截图保存路径
         """
         timestamp = time.strftime("%Y%m%d_%H%M%S")
+        # 移除可能存在的.png后缀
+        name = name.replace('.png', '')
         filename = f"{timestamp}_{name}.png"
         filepath = os.path.join(self.SCREENSHOT_DIR, filename)
         
@@ -197,19 +200,45 @@ class AutoGuiProcessor:
         """
         try:
             # 先尝试查找现有窗口
-            if self.setup_window(self.ERP_WINDOW, timeout=1):
-                self.logger.info("已激活现有ERP窗口")
-                return True
-                
-            # 如果没有找到窗口，启动程序
-            self.logger.info("正在启动ERP程序...")
-            os.startfile(self.ERP_PATH)
+            for _ in range(self.MAX_RETRIES):
+                if self.setup_window(self.ERP_WINDOW, timeout=1):
+                    self.logger.info("已激活现有ERP窗口")
+                    return True
+                time.sleep(self.RETRY_INTERVAL)
             
-            # 等待窗口出现并设置
-            if self.setup_window(self.ERP_WINDOW, timeout=30):
-                self.logger.info("ERP程序已启动")
-                return True
+            # 如果没有找到窗口，检查是否已经有ERP进程在运行
+            erp_process_name = os.path.basename(self.ERP_PATH)
+            erp_running = False
+            
+            for proc in psutil.process_iter(['name']):
+                try:
+                    if proc.info['name'].lower() == erp_process_name.lower():
+                        erp_running = True
+                        self.logger.info("检测到ERP进程正在运行，等待窗口出现...")
+                        break
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+            
+            if erp_running:
+                # 如果进程在运行，等待窗口出现
+                for _ in range(self.MAX_RETRIES):
+                    if self.setup_window(self.ERP_WINDOW, timeout=2):
+                        self.logger.info("ERP窗口已出现")
+                        return True
+                    time.sleep(self.RETRY_INTERVAL)
+            
+            # 只有在没有运行中的ERP进程时才启动新实例
+            if not erp_running:
+                self.logger.info("正在启动ERP程序...")
+                os.startfile(self.ERP_PATH)
                 
+                # 等待窗口出现并设置
+                for _ in range(self.MAX_RETRIES):
+                    if self.setup_window(self.ERP_WINDOW, timeout=5):
+                        self.logger.info("ERP程序已启动")
+                        return True
+                    time.sleep(self.RETRY_INTERVAL)
+            
             self.logger.error("启动ERP程序失败")
             self.take_screenshot("erp_start_failed")
             return False

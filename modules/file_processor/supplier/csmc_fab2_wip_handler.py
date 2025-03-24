@@ -91,7 +91,7 @@ class CsmcFAB2Handler(BaseDeliveryExcelHandler):
                 lambda x: (x + pd.Timedelta(days=7)).date() if pd.notna(x) else pd.NaT
             )
 
-            df["supplier"] = "上华FAB1"
+            df["supplier"] = "上华FAB2"
             df["finished_at"] = pd.NaT
 
             df = df[data_format]

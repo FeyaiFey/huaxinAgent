@@ -172,7 +172,6 @@ class RuleEngine:
         """
         应用邮件规则
         
-
         遍历所有启用的规则，返回第一个匹配的规则的动作和相关信息
         
         参数:
@@ -186,7 +185,6 @@ class RuleEngine:
                 'category': '封装送货单',
                 'supplier': '池州华宇'
             }
-
         """
         self.logger.debug(f"开始匹配规则，邮件主题: {email_data.get('subject', '')}")
 
@@ -202,13 +200,6 @@ class RuleEngine:
                     'allowed_extensions': rule.get('allowed_extensions', [])
                 }
         
-        # 如果没有匹配的规则，使用默认规则
-        default_rule = self.rules.get('默认规则', {})
-        self.logger.debug("邮件使用默认规则处理")
-        return {
-            'actions': default_rule.get('actions', {}),
-            'name': default_rule.get('name', 'unnamed_rule'),
-            'category': default_rule.get('category', '未分类'),
-            'supplier': default_rule.get('supplier', '未知'),
-            'allowed_extensions': default_rule.get('allowed_extensions', [])
-        }
+        # 如果没有匹配的规则，返回空结果
+        self.logger.debug("邮件不匹配任何规则")
+        return {}

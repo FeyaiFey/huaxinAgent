@@ -16,9 +16,9 @@ class HisemiDeliveryHandler(BaseDeliveryExcelHandler):
     池州华宇供应商Excel处理器
     
     处理说明:
-    1. 固定读取'Page 1'工作表
-    2. 日期位置固定在P4单元格
-    3. 从第7行开始读取数据，直到遇到'TOTAL'行
+    1. 固定读取'XLSheet0'工作表
+    2. 日期位置固定在L4单元格
+    3. 从第8行开始读取数据，直到遇到'合计'行
     4. 跳过空行（以订单号是否存在为判断依据）
     5. 验证和格式化数据
     6. 将数据保存到JSON文件
@@ -121,9 +121,9 @@ class HisemiDeliveryHandler(BaseDeliveryExcelHandler):
         处理池州华宇的送货单Excel文件并返回数据字典
         
         处理说明:
-        1. 固定读取'Page 1'工作表
-        2. 日期位置固定在P4单元格
-        3. 从第7行开始读取数据，直到遇到'TOTAL'行
+        1. 固定读取'XLSheet0'工作表
+        2. 日期位置固定在L4单元格
+        3. 从第8行开始读取数据，直到遇到'合计'行
         
         Args:
             excel_path: Excel文件路径
@@ -134,11 +134,11 @@ class HisemiDeliveryHandler(BaseDeliveryExcelHandler):
         try:
             # 加载Excel工作簿，data_only=True表示读取值而不是公式
             wb = load_workbook(excel_path, data_only=True)
-            sheet = wb['Page 1']  # 固定使用Page 1工作表
+            sheet = wb['XLSheet0']  # 固定使用Page 1工作表
             
             data_dict = {}
             # 从固定位置(P4)获取日期
-            date_str = sheet['P4'].value
+            date_str = sheet['L4'].value
             delivery_date = self.utils.format_date(str(date_str))
             
             if not delivery_date:
@@ -147,10 +147,10 @@ class HisemiDeliveryHandler(BaseDeliveryExcelHandler):
                 
             data_list = []
             
-            # 从第8行开始遍历数据，直到遇到TOTAL行
+            # 从第8行开始遍历数据，直到遇到合计行
             for row in range(8, sheet.max_row + 1):
-                # 检查是否到达表格末尾（TOTAL行）
-                if sheet[f'N{row}'].value == 'TOTAL':
+                # 检查是否到达表格末尾（合计行）
+                if sheet[f'N{row}'].value == '合计':
                     break
                     
                 # 跳过空行（以订单号是否存在为判断依据）
@@ -162,12 +162,12 @@ class HisemiDeliveryHandler(BaseDeliveryExcelHandler):
                     row_data = {
                         "送货日期": delivery_date,
                         "订单号": str(sheet[f'D{row}'].value or ''),
-                        "品名": str(sheet[f'F{row}'].value or ''),
-                        "封装形式": str(sheet[f'K{row}'].value or ''),
-                        "打印批号": str(sheet[f'J{row}'].value or ''),
-                        "数量": int(sheet[f'Q{row}'].value or 0),
-                        "晶圆名称": str(sheet[f'O{row}'].value or ''),
-                        "晶圆批号": str(sheet[f'L{row}'].value or ''),
+                        "品名": str(sheet[f'E{row}'].value or ''),
+                        "封装形式": str(sheet[f'J{row}'].value or ''),
+                        "打印批号": str(sheet[f'H{row}'].value or ''),
+                        "数量": int(sheet[f'L{row}'].value or 0),
+                        "晶圆名称": str(sheet[f'F{row}'].value or ''),
+                        "晶圆批号": str(sheet[f'K{row}'].value or ''),
                         "供应商": "池州华宇"
                     }
                     

@@ -1,4 +1,4 @@
- # 基础依赖
+# 基础依赖
 python-dotenv==1.0.0
 pyyaml==6.0.1
 
@@ -23,6 +23,7 @@ PyGetWindow==0.0.9
 pyperclip==1.9.0
 pywin32==306
 keyboard==0.13.5
+psutil==5.9.8
 
 
 # 爬虫

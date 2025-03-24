@@ -79,10 +79,10 @@ class HisemiWipHandler(BaseDeliveryExcelHandler):
             df["订单号"] = df["订单号"].fillna('').astype(str)
 
             # 从后往前遍历numerical_columns，找到第一个值大于0的列名
-            df["当前工序"] = df[numerical_columns[::-1]].apply(
-                lambda row: next(
+            df["当前工序"] = df.apply(
+                lambda row: "STOCK" if row["仓库库存"] > 0 else next(
                     (col for col in numerical_columns[::-1] if row[col] > 0),
-                    None
+                    "研磨"
                 ),
                 axis=1
             )

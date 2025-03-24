@@ -93,16 +93,23 @@ class PsmcHandler(BaseDeliveryExcelHandler):
             df.loc[hold_mask, "status"] = df.loc[hold_mask, "forecastDate"]
             df.loc[wh_mask, "status"] = "STOCK"
 
-            # 清除特殊状态的forecastDate
-            df.loc[hold_mask, "forecastDate"] = pd.NaT
-            df.loc[wh_mask, "forecastDate"] = (pd.Timestamp.today() + pd.Timedelta(days=3)).date()
+            self.logger.debug(df[["purchaseOrder","status","forecastDate"]])
 
             # 将forecastDate列转换为日期类型,格式为%Y-%m-%d，处理错误值
-            df["forecastDate"] = pd.to_datetime(df["forecastDate"], errors='coerce') + pd.Timedelta(days=10)
+            df["forecastDate"] = pd.to_datetime(df["forecastDate"], errors='coerce')
             # 将forecastDate列转换为日期类型,格式为%Y-%m-%d，处理错误值
             df["forecastDate"] = df["forecastDate"].apply(
                 lambda x: (x + pd.Timedelta(days=7)).date() if pd.notna(x) else pd.NaT
             )
+
+            self.logger.debug(df[["purchaseOrder","status","forecastDate"]])
+
+            # 清除特殊状态的forecastDate
+            df.loc[hold_mask, "forecastDate"] = pd.NaT
+            df.loc[wh_mask, "forecastDate"] = (pd.Timestamp.today() + pd.Timedelta(days=3)).date()
+
+            self.logger.debug(df[["purchaseOrder","status","forecastDate"]])
+
             df = df[data_format]
             self.logger.debug(f"成功处理力积电Excel文件")
             return df

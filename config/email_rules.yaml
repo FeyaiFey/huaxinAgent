@@ -4,7 +4,7 @@ rules:
     supplier: "池州华宇"    # 供应商信息
     conditions:    # 匹配条件，所有条件都满足才会触发规则
       from:    # 发件人匹配列表，支持通配符 *
-        - czmk4@hisemi.com.cn    # 精确匹配
+        - hisemi-mes@hisemi.com.cn    # 精确匹配
         - "*@hisemi.com.cn"    # 通配符匹配任何来自该域名的邮件
       to:    # 收件人匹配列表
         - wxb1@h-sun.com
@@ -12,11 +12,11 @@ rules:
         - wanghq@h-sun.com
         - "*@h-sun.com"
       cc:    # 抄送人匹配列表，支持通配符 *
-        - yppeter@hisemi.com.cn    # 精确匹配
+        - yaoshangyong@hisemi.com.cn    # 精确匹配
         - "*@hisemi.com.cn"    # 通配符匹配任何来自该域名的邮件
       subject_contains:    # 主题包含关键词列表（任一关键词匹配即可）
-        - 封装产品送货单
-      subject_regex: "\\d*华芯封装产品送货单\\d+\\.\\d+"    # 主题正则表达式（匹配送货单编号格式，前面的数字可选）
+        - 008 Delivery Order
+      subject_regex: "008 Delivery Order \\d{14}"    # 主题正则表达式（匹配送货单编号格式，后面跟14位数字）
     actions:    # 匹配后的处理动作
       save_attachment: true    # 是否保存附件
       mark_as_read: true    # 是否标记为已读
@@ -24,7 +24,7 @@ rules:
     allowed_extensions:    # 允许下载的附件类型
       - .xlsx
       - .xls
-    enabled: true    # 是否启用该规则
+    enabled: false    # 是否启用该规则
 
   - name: 封装送货单-山东汉旗   
     category: "封装送货单"
@@ -51,7 +51,7 @@ rules:
     allowed_extensions:    
       - .xlsx
       - .xls
-    enabled: true   
+    enabled: false   
 
   - name: 封装送货单-江苏芯丰   
     category: "封装送货单"
@@ -79,7 +79,7 @@ rules:
     allowed_extensions:    
       - .xlsx
       - .xls
-    enabled: true
+    enabled: false
 
   - name: 封装送货单-江苏恩微   
     category: "封装送货单"
@@ -106,7 +106,7 @@ rules:
     allowed_extensions:    
       - .xlsx
       - .xls
-    enabled: true
+    enabled: false
 
   - name: 测试报告-无锡华宇   
     category: "测试报告"
@@ -135,7 +135,7 @@ rules:
       - .xls
       - .rar
       - .zip
-    enabled: true
+    enabled: false
 
   - name: 测试报告-苏州拓芯威   
     category: "测试报告"
@@ -160,7 +160,7 @@ rules:
       - .xls
       - .rar
       - .zip
-    enabled: true
+    enabled: false
 
   - name: 测试报告-苏工院   
     category: "测试报告"
@@ -185,7 +185,7 @@ rules:
       - .xls
       - .rar
       - .zip
-    enabled: true
+    enabled: false
 
   - name: 封装进度表-池州华宇   
     category: "封装进度表"
